@@ -4,7 +4,9 @@ An Amazon-inspired marketplace with original branding, a local catalog, and a co
 
 **Public repository:** https://github.com/UsmanZafar47/shopswift-8x
 
-**Deployment:** awaiting the final authenticated Vercel deployment. The production URL will be recorded here after verification.
+**Live demo:** https://shopswift-8x.vercel.app
+
+Deployed to Vercel and verified without deployment authentication. All 14 browser checks passed against the live site, and 29 routes opened directly. See [QA_REPORT.md](QA_REPORT.md) for evidence. Deployment updates currently use the Vercel CLI (`vercel deploy --prod`); automatic GitHub deployments are not configured.
 
 ![ShopSwift desktop homepage](docs/screenshots/home-desktop.png)
 

@@ -1,0 +1,22 @@
+{
+  "base": "https://shopswift-8x.vercel.app",
+  "passed": [
+    "Homepage and keyboard search suggestions",
+    "Search empty state, category/price filters, sorting",
+    "Gallery, variants, quantity, add-to-cart and refresh persistence",
+    "Cart editing, save/restore, removal, exact totals",
+    "Checkout auth, address validation, shipping/payment, accurate order, cart clearing, confirmation persistence",
+    "Order history persists on refresh",
+    "Invalid login, sign-up, no plaintext passwords, account-specific orders",
+    "Registered demo account can sign in again",
+    "Unknown order and custom 404",
+    "Clean mobile session: navigation, filters, buy now, demo card, standard shipping, complete order",
+    "No horizontal overflow on primary layouts at 360, 768, and 1440 pixels",
+    "Homepage local images load after scroll",
+    "Every catalog image is served locally",
+    "No serious browser console or hydration errors"
+  ],
+  "errors": [],
+  "verifiedAt": "2026-09-23T20:06:26.879Z",
+  "confirmation": "https://shopswift-8x.vercel.app/order-confirmation/SW-06B4D9C1"
+}

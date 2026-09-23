@@ -24,6 +24,17 @@ Raw reports: [browser results](docs/browser-results.json), [accessibility result
 - Delivery dates are computed after hydration so a statically generated product page does not disagree with a later browser visit.
 - Tests use a specific validation-error locator rather than matching Next.js's separate route announcer.
 
-## Still external to local verification
+## Live deployment verification
 
-The production Vercel URL, signed-out access, and deployed route refreshes must be checked after Vercel authentication and deployment. The camera-on walkthrough must be recorded by the applicant. Private Amazon account/checkout screens remain unverified unless the applicant inspects them manually.
+Verified on 23 September 2026 (UTC) at https://shopswift-8x.vercel.app:
+
+- Vercel production build completed successfully.
+- All 14 browser checks passed against the live deployment, including fresh desktop/mobile sessions and complete demo purchases.
+- All 29 tested routes returned HTTP 200 when opened directly without deployment authentication, including all 20 product pages.
+- The GitHub repository is public and its `.agent-logs/` directory is accessible anonymously.
+
+Live reports: [browser results](docs/production-browser-results.json), [direct route checks](docs/production-routes.json).
+
+## Applicant walkthrough
+
+The camera-on walkthrough must be recorded by the applicant and kept under five minutes. Private Amazon account/checkout screens remain unverified unless the applicant inspects them manually.

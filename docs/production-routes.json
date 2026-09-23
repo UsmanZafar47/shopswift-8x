@@ -1,0 +1,123 @@
+{
+  "base": "https://shopswift-8x.vercel.app",
+  "verifiedAt": "2026-09-23T20:05:51.435Z",
+  "authenticated": false,
+  "results": [
+    {
+      "route": "/",
+      "status": 200
+    },
+    {
+      "route": "/search?q=headphones",
+      "status": 200
+    },
+    {
+      "route": "/cart",
+      "status": 200
+    },
+    {
+      "route": "/signin",
+      "status": 200
+    },
+    {
+      "route": "/checkout",
+      "status": 200
+    },
+    {
+      "route": "/orders",
+      "status": 200
+    },
+    {
+      "route": "/account",
+      "status": 200
+    },
+    {
+      "route": "/about",
+      "status": 200
+    },
+    {
+      "route": "/order-confirmation/direct-route-check",
+      "status": 200
+    },
+    {
+      "route": "/product/airpods-max",
+      "status": 200
+    },
+    {
+      "route": "/product/airpods",
+      "status": 200
+    },
+    {
+      "route": "/product/macbook",
+      "status": 200
+    },
+    {
+      "route": "/product/apple-watch",
+      "status": 200
+    },
+    {
+      "route": "/product/homepod",
+      "status": 200
+    },
+    {
+      "route": "/product/wireless-charger",
+      "status": 200
+    },
+    {
+      "route": "/product/table-lamp",
+      "status": 200
+    },
+    {
+      "route": "/product/plant-pot",
+      "status": 200
+    },
+    {
+      "route": "/product/blender",
+      "status": 200
+    },
+    {
+      "route": "/product/travel-cup",
+      "status": 200
+    },
+    {
+      "route": "/product/puma-trainers",
+      "status": 200
+    },
+    {
+      "route": "/product/casual-shirt",
+      "status": 200
+    },
+    {
+      "route": "/product/daypack",
+      "status": 200
+    },
+    {
+      "route": "/product/leather-watch",
+      "status": 200
+    },
+    {
+      "route": "/product/tennis-racket",
+      "status": 200
+    },
+    {
+      "route": "/product/basketball",
+      "status": 200
+    },
+    {
+      "route": "/product/controller",
+      "status": 200
+    },
+    {
+      "route": "/product/keyboard",
+      "status": 200
+    },
+    {
+      "route": "/product/small-habits",
+      "status": 200
+    },
+    {
+      "route": "/product/creative-life",
+      "status": 200
+    }
+  ]
+}
