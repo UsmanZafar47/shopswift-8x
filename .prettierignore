@@ -1,0 +1,8 @@
+.agent-logs/
+.capture-runtime/
+.next/
+node_modules/
+research/
+CAPTURE-TEST.md
+test-results/
+package-lock.json

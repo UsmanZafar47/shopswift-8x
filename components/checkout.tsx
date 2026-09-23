@@ -2,25 +2,496 @@
 import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, ArrowRight, Check, CreditCard, MapPin, Truck, ShieldCheck, Banknote, Pencil, LoaderCircle, Package } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  CreditCard,
+  MapPin,
+  Truck,
+  ShieldCheck,
+  Banknote,
+  Pencil,
+  LoaderCircle,
+  Package,
+} from 'lucide-react';
 import { Address, useStore } from './store';
 import { getProduct, money, deliveryDate } from '@/lib/catalog';
 import { EmptyState, LoadingState, ProductImage } from './ui';
-const blank:Address={name:'',street:'',city:'',region:'',zip:'',country:'United States'};
-const sample:Address={name:'Alex Morgan',street:'123 Demo Lane',city:'Portland',region:'Oregon',zip:'97201',country:'United States'};
-function AddressForm({initial,onNext}:{initial:Address;onNext:(a:Address)=>void}){
- const [address,setAddress]=useState(initial);const [error,setError]=useState('');
- const change=(key:keyof Address,value:string)=>setAddress(a=>({...a,[key]:value}));
- return <form className="address-form" onSubmit={e=>{e.preventDefault();if(Object.values(address).some(v=>v.trim().length<2)){setError('Please complete every address field with at least two characters.');return;}if(address.country==='United States'&&!/^\d{5}(-\d{4})?$/.test(address.zip.trim())){setError('Enter a valid 5-digit US ZIP code.');return;}setError('');onNext(Object.fromEntries(Object.entries(address).map(([k,v])=>[k,v.trim()])) as Address);}}><div className="form-heading"><div><MapPin size={20}/><h2>Where should your good finds go?</h2></div><button className="text-link" type="button" onClick={()=>{setAddress(sample);setError('');}}>Use demo address</button></div><p className="form-intro">Use a fictional address. This is a demo, and nothing will be shipped.</p><div className="field"><label htmlFor="address-name">Full name</label><input id="address-name" autoComplete="shipping name" value={address.name} onChange={e=>change('name',e.target.value)} required minLength={2} maxLength={80} placeholder="Alex Morgan"/></div><div className="field"><label htmlFor="street">Street address</label><input id="street" autoComplete="shipping street-address" value={address.street} onChange={e=>change('street',e.target.value)} required minLength={3} maxLength={160} placeholder="123 Demo Lane"/></div><div className="form-grid"><div className="field"><label htmlFor="city">City</label><input id="city" autoComplete="shipping address-level2" value={address.city} onChange={e=>change('city',e.target.value)} required minLength={2} maxLength={70}/></div><div className="field"><label htmlFor="region">State / province</label><input id="region" autoComplete="shipping address-level1" value={address.region} onChange={e=>change('region',e.target.value)} required minLength={2} maxLength={70}/></div><div className="field"><label htmlFor="zip">ZIP / postal code</label><input id="zip" autoComplete="shipping postal-code" value={address.zip} onChange={e=>change('zip',e.target.value)} required minLength={2} maxLength={16}/></div><div className="field"><label htmlFor="country">Country</label><select id="country" autoComplete="shipping country-name" value={address.country} onChange={e=>change('country',e.target.value)}><option>United States</option><option>Canada</option><option>United Kingdom</option><option>Pakistan</option></select></div></div>{error&&<p className="form-error" role="alert">{error}</p>}<button className="button primary" type="submit">Save & continue<ArrowRight size={16}/></button></form>;
+const blank: Address = {
+  name: '',
+  street: '',
+  city: '',
+  region: '',
+  zip: '',
+  country: 'United States',
+};
+const sample: Address = {
+  name: 'Alex Morgan',
+  street: '123 Demo Lane',
+  city: 'Portland',
+  region: 'Oregon',
+  zip: '97201',
+  country: 'United States',
+};
+function AddressForm({ initial, onNext }: { initial: Address; onNext: (a: Address) => void }) {
+  const [address, setAddress] = useState(initial);
+  const [error, setError] = useState('');
+  const change = (key: keyof Address, value: string) => setAddress((a) => ({ ...a, [key]: value }));
+  return (
+    <form
+      className="address-form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (Object.values(address).some((v) => v.trim().length < 2)) {
+          setError('Please complete every address field with at least two characters.');
+          return;
+        }
+        if (address.country === 'United States' && !/^\d{5}(-\d{4})?$/.test(address.zip.trim())) {
+          setError('Enter a valid 5-digit US ZIP code.');
+          return;
+        }
+        setError('');
+        onNext(
+          Object.fromEntries(Object.entries(address).map(([k, v]) => [k, v.trim()])) as Address,
+        );
+      }}
+    >
+      <div className="form-heading">
+        <div>
+          <MapPin size={20} />
+          <h2>Where should your good finds go?</h2>
+        </div>
+        <button
+          className="text-link"
+          type="button"
+          onClick={() => {
+            setAddress(sample);
+            setError('');
+          }}
+        >
+          Use demo address
+        </button>
+      </div>
+      <p className="form-intro">
+        Use a fictional address. This is a demo, and nothing will be shipped.
+      </p>
+      <div className="field">
+        <label htmlFor="address-name">Full name</label>
+        <input
+          id="address-name"
+          autoComplete="shipping name"
+          value={address.name}
+          onChange={(e) => change('name', e.target.value)}
+          required
+          minLength={2}
+          maxLength={80}
+          placeholder="Alex Morgan"
+        />
+      </div>
+      <div className="field">
+        <label htmlFor="street">Street address</label>
+        <input
+          id="street"
+          autoComplete="shipping street-address"
+          value={address.street}
+          onChange={(e) => change('street', e.target.value)}
+          required
+          minLength={3}
+          maxLength={160}
+          placeholder="123 Demo Lane"
+        />
+      </div>
+      <div className="form-grid">
+        <div className="field">
+          <label htmlFor="city">City</label>
+          <input
+            id="city"
+            autoComplete="shipping address-level2"
+            value={address.city}
+            onChange={(e) => change('city', e.target.value)}
+            required
+            minLength={2}
+            maxLength={70}
+          />
+        </div>
+        <div className="field">
+          <label htmlFor="region">State / province</label>
+          <input
+            id="region"
+            autoComplete="shipping address-level1"
+            value={address.region}
+            onChange={(e) => change('region', e.target.value)}
+            required
+            minLength={2}
+            maxLength={70}
+          />
+        </div>
+        <div className="field">
+          <label htmlFor="zip">ZIP / postal code</label>
+          <input
+            id="zip"
+            autoComplete="shipping postal-code"
+            value={address.zip}
+            onChange={(e) => change('zip', e.target.value)}
+            required
+            minLength={2}
+            maxLength={16}
+          />
+        </div>
+        <div className="field">
+          <label htmlFor="country">Country</label>
+          <select
+            id="country"
+            autoComplete="shipping country-name"
+            value={address.country}
+            onChange={(e) => change('country', e.target.value)}
+          >
+            <option>United States</option>
+            <option>Canada</option>
+            <option>United Kingdom</option>
+            <option>Pakistan</option>
+          </select>
+        </div>
+      </div>
+      {error && (
+        <p className="form-error" role="alert">
+          {error}
+        </p>
+      )}
+      <button className="button primary" type="submit">
+        Save & continue
+        <ArrowRight size={16} />
+      </button>
+    </form>
+  );
 }
-export function Checkout(){
- const store=useStore();const router=useRouter();const [step,setStep]=useState(1);const [address,setAddress]=useState<Address|null>(null);const [express,setExpress]=useState(false);const [payment,setPayment]=useState('Demo card ···· 4242');const [busy,setBusy]=useState(false);const [error,setError]=useState('');const placing=useRef(false);
- const count=store.cart.reduce((s,i)=>s+i.quantity,0);const subtotal=store.cart.reduce((s,i)=>s+Math.round(getProduct(i.productId)!.price*100)*i.quantity,0)/100;const shipping=express?9.99:subtotal>=50?0:4.99;const total=Math.round((subtotal+shipping)*100)/100;
- function go(n:number){setStep(n);window.scrollTo({top:0,behavior:'smooth'});}
- async function place(){if(placing.current||!address)return;placing.current=true;setBusy(true);setError('');try{const id=store.placeOrder(address,express,payment);router.replace(`/order-confirmation/${id}`);}catch(e){setError(e instanceof Error?e.message:'Could not save your order. Try again.');placing.current=false;setBusy(false);}}
- if(!store.ready)return <LoadingState/>;
- if(busy&&!store.cart.length)return <LoadingState/>;
- if(!store.cart.length)return <div className="page-shell"><EmptyState title="First, a good find." description="Add something to your cart before checking out."/></div>;
- if(!store.user)return <div className="page-shell"><section className="checkout-auth"><span className="empty-icon"><ShieldCheck size={36}/></span><span className="eyebrow">ONE LITTLE STEP BEFORE CHECKOUT</span><h1>Let’s make this yours.</h1><p>Sign in to save your demo order, or explore the full checkout with our ready-to-go demo account.</p><button className="button primary" onClick={store.demoLogin}>Continue as demo user<ArrowRight size={17}/></button><Link className="button secondary" href="/signin?next=/checkout">Sign in or create an account</Link><Link className="text-link" href="/cart"><ArrowLeft size={14}/>Back to your cart</Link></section></div>;
- return <div className="page-shell checkout-page"><div className="page-title-row"><div><span className="eyebrow">ALMOST YOURS</span><h1>A happy little checkout.</h1></div><span className="secure-note"><ShieldCheck size={17}/>Demo checkout · No real charges</span></div><ol className="checkout-steps">{['Delivery address','Shipping & payment','Review your order'].map((label,i)=><li key={label} className={step===i+1?'current':step>i+1?'done':''}><button disabled={i+1>step} onClick={()=>go(i+1)} aria-current={step===i+1?'step':undefined}><span>{step>i+1?<Check size={15}/>:i+1}</span>{label}</button></li>)}</ol><div className="checkout-layout"><section className="checkout-form-panel">{step===1&&<AddressForm initial={address||store.addresses[store.user.email]||{...blank,name:store.user.name}} onNext={a=>{store.saveAddress(a);setAddress(a);go(2);}}/>}{step===2&&<><div className="form-heading"><div><Truck size={20}/><h2>Good things are on the way.</h2></div></div><p className="form-intro">Choose your simulated delivery and payment options.</p><fieldset className="choice-group"><legend>Delivery speed</legend><label className={`choice-card ${!express?'selected':''}`}><input type="radio" name="shipping" checked={!express} onChange={()=>setExpress(false)}/><Truck size={21}/><span><b>Standard delivery</b><small>Arrives by {deliveryDate(5)}</small></span><strong>{subtotal>=50?'FREE':money(4.99)}</strong></label><label className={`choice-card ${express?'selected':''}`}><input type="radio" name="shipping" checked={express} onChange={()=>setExpress(true)}/><Package size={21}/><span><b>Express delivery</b><small>Arrives by {deliveryDate(2)}</small></span><strong>{money(9.99)}</strong></label></fieldset><fieldset className="choice-group"><legend>Demo payment method</legend><label className={`choice-card ${payment.startsWith('Demo')?'selected':''}`}><input type="radio" name="payment" checked={payment.startsWith('Demo')} onChange={()=>setPayment('Demo card ···· 4242')}/><CreditCard size={23}/><span><b>Demo card ···· 4242</b><small>A pretend card. No details needed.</small></span></label><label className={`choice-card ${payment==='Pay on delivery (demo)'?'selected':''}`}><input type="radio" name="payment" checked={payment==='Pay on delivery (demo)'} onChange={()=>setPayment('Pay on delivery (demo)')}/><Banknote size={23}/><span><b>Pay on delivery</b><small>Simulated only. Nothing will be collected.</small></span></label></fieldset><div className="form-buttons"><button className="text-link" onClick={()=>go(1)}><ArrowLeft size={15}/>Back</button><button className="button primary" onClick={()=>go(3)}>Review your order<ArrowRight size={16}/></button></div></>}{step===3&&address&&<><div className="form-heading"><div><Check size={21}/><h2>One last look at your good finds.</h2></div></div><p className="form-intro">Everything look right? Your demo order is almost ready.</p><div className="review-details"><div><div className="review-heading"><h3><MapPin size={16}/>Delivering to</h3><button aria-label="Edit delivery address" onClick={()=>go(1)}><Pencil size={14}/></button></div><p><b>{address.name}</b><br/>{address.street}<br/>{address.city}, {address.region} {address.zip}<br/>{address.country}</p></div><div><div className="review-heading"><h3><CreditCard size={16}/>Payment & delivery</h3><button aria-label="Edit payment and shipping" onClick={()=>go(2)}><Pencil size={14}/></button></div><p>{payment}<br/>{express?'Express':'Standard'} delivery<br/>By {deliveryDate(express?2:5)}</p></div></div><div className="review-items">{store.cart.map(i=>{const p=getProduct(i.productId)!;return <div className="review-item" key={`${i.productId}-${i.variant}`}><div className="review-item-image"><ProductImage product={p}/></div><div><b>{p.title}</b><p>{i.variant} · Qty: {i.quantity}</p></div><strong>{money(p.price*i.quantity)}</strong></div>})}</div>{error&&<p className="form-error" role="alert">{error}</p>}<div className="place-order-panel"><p><ShieldCheck size={16}/>This creates a demo order only. You won’t be charged.</p><button className="button primary full" disabled={busy} onClick={place}>{busy?<LoaderCircle size={18} className="spin"/>:<Check size={18}/>} {busy?'Saving your good finds…':`Place demo order · ${money(total)}`}</button></div></>}</section><aside className="order-summary"><h2>Your good finds</h2><div className="checkout-summary-items">{store.cart.map(i=>{const p=getProduct(i.productId)!;return <div key={`${i.productId}-${i.variant}`}><div className="mini-image"><ProductImage product={p}/><span>{i.quantity}</span></div><div><b>{p.title}</b><small>{i.variant}</small></div><strong>{money(p.price*i.quantity)}</strong></div>})}</div><div className="summary-line"><span>Subtotal ({count} items)</span><b>{money(subtotal)}</b></div><div className="summary-line"><span>{express?'Express':'Standard'} shipping</span><b>{shipping===0?'FREE':money(shipping)}</b></div><div className="summary-line"><span>Demo tax</span><span>{money(0)}</span></div><div className="summary-total"><span>Total</span><b>{money(total)}</b></div><p className="summary-note">All amounts in USD. This is a simulated purchase.</p><Link className="text-link" href="/cart"><Pencil size={13}/>Edit your cart</Link></aside></div></div>;
+export function Checkout() {
+  const store = useStore();
+  const router = useRouter();
+  const [step, setStep] = useState(1);
+  const [address, setAddress] = useState<Address | null>(null);
+  const [express, setExpress] = useState(false);
+  const [payment, setPayment] = useState('Demo card ···· 4242');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const placing = useRef(false);
+  const count = store.cart.reduce((s, i) => s + i.quantity, 0);
+  const subtotal =
+    store.cart.reduce(
+      (s, i) => s + Math.round(getProduct(i.productId)!.price * 100) * i.quantity,
+      0,
+    ) / 100;
+  const shipping = express ? 9.99 : subtotal >= 50 ? 0 : 4.99;
+  const total = Math.round((subtotal + shipping) * 100) / 100;
+  function go(n: number) {
+    setStep(n);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  async function place() {
+    if (placing.current || !address) return;
+    placing.current = true;
+    setBusy(true);
+    setError('');
+    try {
+      const id = store.placeOrder(address, express, payment);
+      router.replace(`/order-confirmation/${id}`);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Could not save your order. Try again.');
+      placing.current = false;
+      setBusy(false);
+    }
+  }
+  if (!store.ready) return <LoadingState />;
+  if (busy && !store.cart.length) return <LoadingState />;
+  if (!store.cart.length)
+    return (
+      <div className="page-shell">
+        <EmptyState
+          title="First, a good find."
+          description="Add something to your cart before checking out."
+        />
+      </div>
+    );
+  if (!store.user)
+    return (
+      <div className="page-shell">
+        <section className="checkout-auth">
+          <span className="empty-icon">
+            <ShieldCheck size={36} />
+          </span>
+          <span className="eyebrow">ONE LITTLE STEP BEFORE CHECKOUT</span>
+          <h1>Let’s make this yours.</h1>
+          <p>
+            Sign in to save your demo order, or explore the full checkout with our ready-to-go demo
+            account.
+          </p>
+          <button className="button primary" onClick={store.demoLogin}>
+            Continue as demo user
+            <ArrowRight size={17} />
+          </button>
+          <Link className="button secondary" href="/signin?next=/checkout">
+            Sign in or create an account
+          </Link>
+          <Link className="text-link" href="/cart">
+            <ArrowLeft size={14} />
+            Back to your cart
+          </Link>
+        </section>
+      </div>
+    );
+  return (
+    <div className="page-shell checkout-page">
+      <div className="page-title-row">
+        <div>
+          <span className="eyebrow">ALMOST YOURS</span>
+          <h1>A happy little checkout.</h1>
+        </div>
+        <span className="secure-note">
+          <ShieldCheck size={17} />
+          Demo checkout · No real charges
+        </span>
+      </div>
+      <ol className="checkout-steps">
+        {['Delivery address', 'Shipping & payment', 'Review your order'].map((label, i) => (
+          <li key={label} className={step === i + 1 ? 'current' : step > i + 1 ? 'done' : ''}>
+            <button
+              disabled={i + 1 > step}
+              onClick={() => go(i + 1)}
+              aria-current={step === i + 1 ? 'step' : undefined}
+            >
+              <span>{step > i + 1 ? <Check size={15} /> : i + 1}</span>
+              {label}
+            </button>
+          </li>
+        ))}
+      </ol>
+      <div className="checkout-layout">
+        <section className="checkout-form-panel">
+          {step === 1 && (
+            <AddressForm
+              initial={
+                address || store.addresses[store.user.email] || { ...blank, name: store.user.name }
+              }
+              onNext={(a) => {
+                store.saveAddress(a);
+                setAddress(a);
+                go(2);
+              }}
+            />
+          )}
+          {step === 2 && (
+            <>
+              <div className="form-heading">
+                <div>
+                  <Truck size={20} />
+                  <h2>Good things are on the way.</h2>
+                </div>
+              </div>
+              <p className="form-intro">Choose your simulated delivery and payment options.</p>
+              <fieldset className="choice-group">
+                <legend>Delivery speed</legend>
+                <label className={`choice-card ${!express ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="shipping"
+                    checked={!express}
+                    onChange={() => setExpress(false)}
+                  />
+                  <Truck size={21} />
+                  <span>
+                    <b>Standard delivery</b>
+                    <small>Arrives by {deliveryDate(5)}</small>
+                  </span>
+                  <strong>{subtotal >= 50 ? 'FREE' : money(4.99)}</strong>
+                </label>
+                <label className={`choice-card ${express ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="shipping"
+                    checked={express}
+                    onChange={() => setExpress(true)}
+                  />
+                  <Package size={21} />
+                  <span>
+                    <b>Express delivery</b>
+                    <small>Arrives by {deliveryDate(2)}</small>
+                  </span>
+                  <strong>{money(9.99)}</strong>
+                </label>
+              </fieldset>
+              <fieldset className="choice-group">
+                <legend>Demo payment method</legend>
+                <label className={`choice-card ${payment.startsWith('Demo') ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="payment"
+                    checked={payment.startsWith('Demo')}
+                    onChange={() => setPayment('Demo card ···· 4242')}
+                  />
+                  <CreditCard size={23} />
+                  <span>
+                    <b>Demo card ···· 4242</b>
+                    <small>A pretend card. No details needed.</small>
+                  </span>
+                </label>
+                <label
+                  className={`choice-card ${payment === 'Pay on delivery (demo)' ? 'selected' : ''}`}
+                >
+                  <input
+                    type="radio"
+                    name="payment"
+                    checked={payment === 'Pay on delivery (demo)'}
+                    onChange={() => setPayment('Pay on delivery (demo)')}
+                  />
+                  <Banknote size={23} />
+                  <span>
+                    <b>Pay on delivery</b>
+                    <small>Simulated only. Nothing will be collected.</small>
+                  </span>
+                </label>
+              </fieldset>
+              <div className="form-buttons">
+                <button className="text-link" onClick={() => go(1)}>
+                  <ArrowLeft size={15} />
+                  Back
+                </button>
+                <button className="button primary" onClick={() => go(3)}>
+                  Review your order
+                  <ArrowRight size={16} />
+                </button>
+              </div>
+            </>
+          )}
+          {step === 3 && address && (
+            <>
+              <div className="form-heading">
+                <div>
+                  <Check size={21} />
+                  <h2>One last look at your good finds.</h2>
+                </div>
+              </div>
+              <p className="form-intro">Everything look right? Your demo order is almost ready.</p>
+              <div className="review-details">
+                <div>
+                  <div className="review-heading">
+                    <h3>
+                      <MapPin size={16} />
+                      Delivering to
+                    </h3>
+                    <button aria-label="Edit delivery address" onClick={() => go(1)}>
+                      <Pencil size={14} />
+                    </button>
+                  </div>
+                  <p>
+                    <b>{address.name}</b>
+                    <br />
+                    {address.street}
+                    <br />
+                    {address.city}, {address.region} {address.zip}
+                    <br />
+                    {address.country}
+                  </p>
+                </div>
+                <div>
+                  <div className="review-heading">
+                    <h3>
+                      <CreditCard size={16} />
+                      Payment & delivery
+                    </h3>
+                    <button aria-label="Edit payment and shipping" onClick={() => go(2)}>
+                      <Pencil size={14} />
+                    </button>
+                  </div>
+                  <p>
+                    {payment}
+                    <br />
+                    {express ? 'Express' : 'Standard'} delivery
+                    <br />
+                    By {deliveryDate(express ? 2 : 5)}
+                  </p>
+                </div>
+              </div>
+              <div className="review-items">
+                {store.cart.map((i) => {
+                  const p = getProduct(i.productId)!;
+                  return (
+                    <div className="review-item" key={`${i.productId}-${i.variant}`}>
+                      <div className="review-item-image">
+                        <ProductImage product={p} />
+                      </div>
+                      <div>
+                        <b>{p.title}</b>
+                        <p>
+                          {i.variant} · Qty: {i.quantity}
+                        </p>
+                      </div>
+                      <strong>{money(p.price * i.quantity)}</strong>
+                    </div>
+                  );
+                })}
+              </div>
+              {error && (
+                <p className="form-error" role="alert">
+                  {error}
+                </p>
+              )}
+              <div className="place-order-panel">
+                <p>
+                  <ShieldCheck size={16} />
+                  This creates a demo order only. You won’t be charged.
+                </p>
+                <button className="button primary full" disabled={busy} onClick={place}>
+                  {busy ? <LoaderCircle size={18} className="spin" /> : <Check size={18} />}{' '}
+                  {busy ? 'Saving your good finds…' : `Place demo order · ${money(total)}`}
+                </button>
+              </div>
+            </>
+          )}
+        </section>
+        <aside className="order-summary">
+          <h2>Your good finds</h2>
+          <div className="checkout-summary-items">
+            {store.cart.map((i) => {
+              const p = getProduct(i.productId)!;
+              return (
+                <div key={`${i.productId}-${i.variant}`}>
+                  <div className="mini-image">
+                    <ProductImage product={p} />
+                    <span>{i.quantity}</span>
+                  </div>
+                  <div>
+                    <b>{p.title}</b>
+                    <small>{i.variant}</small>
+                  </div>
+                  <strong>{money(p.price * i.quantity)}</strong>
+                </div>
+              );
+            })}
+          </div>
+          <div className="summary-line">
+            <span>Subtotal ({count} items)</span>
+            <b>{money(subtotal)}</b>
+          </div>
+          <div className="summary-line">
+            <span>{express ? 'Express' : 'Standard'} shipping</span>
+            <b>{shipping === 0 ? 'FREE' : money(shipping)}</b>
+          </div>
+          <div className="summary-line">
+            <span>Demo tax</span>
+            <span>{money(0)}</span>
+          </div>
+          <div className="summary-total">
+            <span>Total</span>
+            <b>{money(total)}</b>
+          </div>
+          <p className="summary-note">All amounts in USD. This is a simulated purchase.</p>
+          <Link className="text-link" href="/cart">
+            <Pencil size={13} />
+            Edit your cart
+          </Link>
+        </aside>
+      </div>
+    </div>
+  );
 }

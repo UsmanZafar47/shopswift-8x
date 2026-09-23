@@ -1,0 +1,9 @@
+.agent-logs/
+.capture-runtime/
+.git/
+.qodo/
+research/
+test-results/
+scripts/
+docs/
+*.md

@@ -1,10 +1,45 @@
 import data from './catalog.json';
 export type Category = 'Electronics' | 'Home' | 'Fashion' | 'Fitness' | 'Gaming' | 'Books';
-export type Product = { id: string; title: string; brand: string; category: string; price: number; originalPrice: number; variants: string[]; tagline: string; description: string; features: string[]; images: string[]; rating: number; reviews: number; stock: number };
+export type Product = {
+  id: string;
+  title: string;
+  brand: string;
+  category: string;
+  price: number;
+  originalPrice: number;
+  variants: string[];
+  tagline: string;
+  description: string;
+  features: string[];
+  images: string[];
+  rating: number;
+  reviews: number;
+  stock: number;
+};
 export const products: Product[] = data;
-export const categories: Category[] = ['Electronics', 'Home', 'Fashion', 'Gaming', 'Fitness', 'Books'];
-export const getProduct = (id: string) => products.find(p => p.id === id);
-export const money = (value: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+export const categories: Category[] = [
+  'Electronics',
+  'Home',
+  'Fashion',
+  'Gaming',
+  'Fitness',
+  'Books',
+];
+export const getProduct = (id: string) => products.find((p) => p.id === id);
+export const money = (value: number) =>
+  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
 export const discount = (p: Product) => Math.round((1 - p.price / p.originalPrice) * 100);
-export const deliveryDate = (days = 5) => new Date(Date.now() + days * 86400000).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-export const categoryImages: Record<string, string> = { Electronics: 'airpods-max', Home: 'table-lamp', Fashion: 'puma-trainers', Gaming: 'controller', Fitness: 'tennis-racket', Books: 'small-habits' };
+export const deliveryDate = (days = 5) =>
+  new Date(Date.now() + days * 86400000).toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+  });
+export const categoryImages: Record<string, string> = {
+  Electronics: 'airpods-max',
+  Home: 'table-lamp',
+  Fashion: 'puma-trainers',
+  Gaming: 'controller',
+  Fitness: 'tennis-racket',
+  Books: 'small-habits',
+};

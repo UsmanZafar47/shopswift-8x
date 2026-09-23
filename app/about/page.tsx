@@ -1,4 +1,44 @@
 import Link from 'next/link';
 import { ArrowRight, Sparkles } from 'lucide-react';
-export const metadata={title:'About this demo'};
-export default function About(){return <div className="page-shell"><article className="about-page"><span className="empty-icon"><Sparkles size={32}/></span><span className="eyebrow">GOOD FINDS. ZERO REAL CHARGES.</span><h1>A store made for exploring.</h1><p>ShopSwift is an independent, Amazon-inspired e-commerce demo built for an engineering assignment. It brings a familiar shopping journey into a calmer, thoughtfully organized marketplace.</p><h2>Make yourself at home.</h2><p>Browse 20 products, search and filter, pick your options, fill a cart, and place a demo order. Continue as a demo user with one click, or create a fictional account. Everything is saved in your current browser.</p><h2>A few things to know.</h2><ul><li>Prices, discounts, ratings, reviews, availability, and shipping dates are illustrative.</li><li>No real payment is collected, no items are shipped, and no confirmation emails are sent.</li><li>Demo returns are descriptive only; there is no real return service.</li><li>Use a made-up address and a password you don’t use anywhere else.</li><li>Clearing browser storage removes your demo accounts, cart, and orders.</li><li>ShopSwift is not affiliated with Amazon or any of the displayed manufacturers.</li></ul><Link href="/search" className="button primary">Find something good<ArrowRight size={16}/></Link></article></div>;}
+export const metadata = { title: 'About this demo' };
+export default function About() {
+  return (
+    <div className="page-shell">
+      <article className="about-page">
+        <span className="empty-icon">
+          <Sparkles size={32} />
+        </span>
+        <span className="eyebrow">GOOD FINDS. ZERO REAL CHARGES.</span>
+        <h1>A store made for exploring.</h1>
+        <p>
+          ShopSwift is an independent, Amazon-inspired e-commerce demo built for an engineering
+          assignment. It brings a familiar shopping journey into a calmer, thoughtfully organized
+          marketplace.
+        </p>
+        <h2>Make yourself at home.</h2>
+        <p>
+          Browse 20 products, search and filter, pick your options, fill a cart, and place a demo
+          order. Continue as a demo user with one click, or create a fictional account. Everything
+          is saved in your current browser.
+        </p>
+        <h2>A few things to know.</h2>
+        <ul>
+          <li>
+            Prices, discounts, ratings, reviews, availability, and shipping dates are illustrative.
+          </li>
+          <li>
+            No real payment is collected, no items are shipped, and no confirmation emails are sent.
+          </li>
+          <li>Demo returns are descriptive only; there is no real return service.</li>
+          <li>Use a made-up address and a password you don’t use anywhere else.</li>
+          <li>Clearing browser storage removes your demo accounts, cart, and orders.</li>
+          <li>ShopSwift is not affiliated with Amazon or any of the displayed manufacturers.</li>
+        </ul>
+        <Link href="/search" className="button primary">
+          Find something good
+          <ArrowRight size={16} />
+        </Link>
+      </article>
+    </div>
+  );
+}

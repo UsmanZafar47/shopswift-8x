@@ -4,6 +4,173 @@ import { products, getProduct, categories, categoryImages } from '@/lib/catalog'
 import { ProductImage, ProductSection } from '@/components/ui';
 import { RecentlyViewed } from '@/components/recently-viewed';
 export default function Home() {
- const hero = getProduct('airpods-max')!;
- return <div className="home-page"><div className="home-intro"><span><span className="live-dot"/>Good finds. Great prices. Every day.</span><span>Welcome to your next favorite store <Sparkles size={14}/></span></div><section className="hero"><div className="hero-copy"><span className="hero-kicker"><span/>THE EVERYDAY EDIT</span><h1>Little upgrades.<br/>Big everyday <em>joy.</em></h1><p>From the things you need to the finds you love.<br className="desktop-only"/> Discover a little better, every day.</p><Link className="button dark" href="/search?deals=true">Explore the good stuff <ArrowRight size={17}/></Link><div className="hero-perks"><span><Check size={14}/>Thoughtfully picked</span><span><Check size={14}/>Happily priced</span></div></div><div className="hero-art"><div className="hero-circle"/><span className="hero-orbit orbit-one"/><span className="hero-orbit orbit-two"/><div className="hero-product"><ProductImage product={hero} priority/></div><div className="hero-sticker"><span>Up to</span><strong>35<span>%</span></strong><span>off everyday favorites</span></div><div className="hero-label"><span className="hero-label-icon"><Zap size={20}/></span><div><small>LESS NOISE. MORE YOU.</small><b>Find your new favorite sound</b></div><Link aria-label="Explore Apple AirPods Max" href="/product/airpods-max"><ArrowUpRight size={22}/></Link></div><span className="hero-caption">THE SOUND OF A GOOD FIND.</span></div></section><section className="category-section"><div className="section-heading"><h2>A little something for every you.</h2><Link className="text-link" href="/search">All departments <ArrowRight size={16}/></Link></div><div className="category-grid">{categories.map((category,i)=><Link href={`/search?category=${category}`} className={`category-card category-${i}`} key={category}><div className="category-image"><ProductImage product={getProduct(categoryImages[category])!}/></div><div><b>{category==='Home'?'Home & living':category}</b><ArrowUpRight size={17}/></div></Link>)}</div></section><ProductSection title="Good finds. Even better prices." subtitle="A few favorites, with a little extra off." href="/search?deals=true" link="Explore the deals" products={['airpods-max','puma-trainers','homepod','table-lamp','small-habits'].map(id=>getProduct(id)!)}/><section className="editorial-grid"><Link href="/search?category=Home" className="editorial-card home-edit"><div><span className="eyebrow">MAKE YOURSELF AT HOME</span><h2>Your space.<br/>A little more you.</h2><p>Small touches. A whole new feeling.</p><span className="text-link">Refresh your space <ArrowRight size={16}/></span></div><div className="editorial-image"><ProductImage product={getProduct('plant-pot')!}/></div><span className="editorial-circle"/></Link><Link href="/search?category=Gaming" className="editorial-card play-edit"><div><span className="eyebrow">OFF THE CLOCK. IN YOUR ELEMENT.</span><h2>Make more<br/>time for play.</h2><p>Your next level starts right here.</p><span className="text-link">Find your game <ArrowRight size={16}/></span></div><div className="editorial-image"><ProductImage product={getProduct('controller')!}/></div></Link></section><ProductSection title="Meet your next everyday favorites." subtitle="A few things we think you’ll love." products={['airpods','leather-watch','blender','daypack','creative-life'].map(id=>getProduct(id)!)}/><section className="club-banner"><span className="club-icon"><Sparkles size={32}/></span><div><span className="eyebrow">A LITTLE PERK FOR YOUR CART</span><h2>Good things come with free shipping.</h2><p>Spend $50 or more and standard delivery is on us.</p></div><Link className="button dark" href="/search">Find your next favorite <ArrowRight size={17}/></Link></section><ProductSection title="Popular for a reason." subtitle="The crowd favorites, all in one place." href="/search?sort=rating" products={[...products].sort((a,b)=>b.rating-a.rating).slice(0,5)}/><RecentlyViewed/></div>;
+  const hero = getProduct('airpods-max')!;
+  return (
+    <div className="home-page">
+      <div className="home-intro">
+        <span>
+          <span className="live-dot" />
+          Good finds. Great prices. Every day.
+        </span>
+        <span>
+          Welcome to your next favorite store <Sparkles size={14} />
+        </span>
+      </div>
+      <section className="hero">
+        <div className="hero-copy">
+          <span className="hero-kicker">
+            <span />
+            THE EVERYDAY EDIT
+          </span>
+          <h1>
+            Little upgrades.
+            <br />
+            Big everyday <em>joy.</em>
+          </h1>
+          <p>
+            From the things you need to the finds you love.
+            <br className="desktop-only" /> Discover a little better, every day.
+          </p>
+          <Link className="button dark" href="/search?deals=true">
+            Explore the good stuff <ArrowRight size={17} />
+          </Link>
+          <div className="hero-perks">
+            <span>
+              <Check size={14} />
+              Thoughtfully picked
+            </span>
+            <span>
+              <Check size={14} />
+              Happily priced
+            </span>
+          </div>
+        </div>
+        <div className="hero-art">
+          <div className="hero-circle" />
+          <span className="hero-orbit orbit-one" />
+          <span className="hero-orbit orbit-two" />
+          <div className="hero-product">
+            <ProductImage product={hero} priority />
+          </div>
+          <div className="hero-sticker">
+            <span>Up to</span>
+            <strong>
+              35<span>%</span>
+            </strong>
+            <span>off everyday favorites</span>
+          </div>
+          <div className="hero-label">
+            <span className="hero-label-icon">
+              <Zap size={20} />
+            </span>
+            <div>
+              <small>LESS NOISE. MORE YOU.</small>
+              <b>Find your new favorite sound</b>
+            </div>
+            <Link aria-label="Explore Apple AirPods Max" href="/product/airpods-max">
+              <ArrowUpRight size={22} />
+            </Link>
+          </div>
+          <span className="hero-caption">THE SOUND OF A GOOD FIND.</span>
+        </div>
+      </section>
+      <section className="category-section">
+        <div className="section-heading">
+          <h2>A little something for every you.</h2>
+          <Link className="text-link" href="/search">
+            All departments <ArrowRight size={16} />
+          </Link>
+        </div>
+        <div className="category-grid">
+          {categories.map((category, i) => (
+            <Link
+              href={`/search?category=${category}`}
+              className={`category-card category-${i}`}
+              key={category}
+            >
+              <div className="category-image">
+                <ProductImage product={getProduct(categoryImages[category])!} />
+              </div>
+              <div>
+                <b>{category === 'Home' ? 'Home & living' : category}</b>
+                <ArrowUpRight size={17} />
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+      <ProductSection
+        title="Good finds. Even better prices."
+        subtitle="A few favorites, with a little extra off."
+        href="/search?deals=true"
+        link="Explore the deals"
+        products={['airpods-max', 'puma-trainers', 'homepod', 'table-lamp', 'small-habits'].map(
+          (id) => getProduct(id)!,
+        )}
+      />
+      <section className="editorial-grid">
+        <Link href="/search?category=Home" className="editorial-card home-edit">
+          <div>
+            <span className="eyebrow">MAKE YOURSELF AT HOME</span>
+            <h2>
+              Your space.
+              <br />A little more you.
+            </h2>
+            <p>Small touches. A whole new feeling.</p>
+            <span className="text-link">
+              Refresh your space <ArrowRight size={16} />
+            </span>
+          </div>
+          <div className="editorial-image">
+            <ProductImage product={getProduct('plant-pot')!} />
+          </div>
+          <span className="editorial-circle" />
+        </Link>
+        <Link href="/search?category=Gaming" className="editorial-card play-edit">
+          <div>
+            <span className="eyebrow">OFF THE CLOCK. IN YOUR ELEMENT.</span>
+            <h2>
+              Make more
+              <br />
+              time for play.
+            </h2>
+            <p>Your next level starts right here.</p>
+            <span className="text-link">
+              Find your game <ArrowRight size={16} />
+            </span>
+          </div>
+          <div className="editorial-image">
+            <ProductImage product={getProduct('controller')!} />
+          </div>
+        </Link>
+      </section>
+      <ProductSection
+        title="Meet your next everyday favorites."
+        subtitle="A few things we think you’ll love."
+        products={['airpods', 'leather-watch', 'blender', 'daypack', 'creative-life'].map((id) =>
+          getProduct(id)!,
+        )}
+      />
+      <section className="club-banner">
+        <span className="club-icon">
+          <Sparkles size={32} />
+        </span>
+        <div>
+          <span className="eyebrow">A LITTLE PERK FOR YOUR CART</span>
+          <h2>Good things come with free shipping.</h2>
+          <p>Spend $50 or more and standard delivery is on us.</p>
+        </div>
+        <Link className="button dark" href="/search">
+          Find your next favorite <ArrowRight size={17} />
+        </Link>
+      </section>
+      <ProductSection
+        title="Popular for a reason."
+        subtitle="The crowd favorites, all in one place."
+        href="/search?sort=rating"
+        products={[...products].sort((a, b) => b.rating - a.rating).slice(0, 5)}
+      />
+      <RecentlyViewed />
+    </div>
+  );
 }
