@@ -1,0 +1,7 @@
+.capture-runtime/
+.qodo/
+node_modules/
+.next/
+.vercel/
+.env*
+!.env.example
