@@ -1,0 +1,507 @@
+[
+  {
+    "id": "airpods-max",
+    "title": "Apple AirPods Max",
+    "brand": "Apple",
+    "category": "Electronics",
+    "price": 399,
+    "originalPrice": 549,
+    "variants": [
+      "Silver"
+    ],
+    "tagline": "Immersive listening. Beautifully simple.",
+    "description": "Over-ear wireless headphones with a comfortable knit canopy and rich, room-filling sound.",
+    "features": [
+      "Active noise cancellation",
+      "Up to 20 hours of listening",
+      "Comfortable over-ear cushions"
+    ],
+    "rating": 4.8,
+    "reviews": 1248,
+    "stock": 20,
+    "images": [
+      "/products/airpods-max-0.webp"
+    ]
+  },
+  {
+    "id": "airpods",
+    "title": "Apple AirPods with charging case",
+    "brand": "Apple",
+    "category": "Electronics",
+    "price": 99,
+    "originalPrice": 129,
+    "variants": [
+      "White"
+    ],
+    "tagline": "Your everyday soundtrack.",
+    "description": "Lightweight wireless earbuds with an easy-to-carry charging case.",
+    "features": [
+      "Wireless Bluetooth connection",
+      "Pocket-sized charging case",
+      "Built-in microphone"
+    ],
+    "rating": 4.6,
+    "reviews": 862,
+    "stock": 21,
+    "images": [
+      "/products/airpods-0.webp",
+      "/products/airpods-1.webp",
+      "/products/airpods-2.webp"
+    ]
+  },
+  {
+    "id": "macbook",
+    "title": "Apple MacBook Pro 14-inch",
+    "brand": "Apple",
+    "category": "Electronics",
+    "price": 1299,
+    "originalPrice": 1499,
+    "variants": [
+      "Space Grey"
+    ],
+    "tagline": "Make room for your next big idea.",
+    "description": "A capable 14-inch laptop for creative projects, study, and everyday productivity.",
+    "features": [
+      "14-inch display",
+      "Backlit keyboard",
+      "USB-C connectivity"
+    ],
+    "rating": 4.9,
+    "reviews": 2301,
+    "stock": 22,
+    "images": [
+      "/products/macbook-0.webp",
+      "/products/macbook-1.webp",
+      "/products/macbook-2.webp"
+    ]
+  },
+  {
+    "id": "apple-watch",
+    "title": "Apple Watch, gold aluminum",
+    "brand": "Apple",
+    "category": "Electronics",
+    "price": 179,
+    "originalPrice": 229,
+    "variants": [
+      "Gold"
+    ],
+    "tagline": "A little more connected.",
+    "description": "A comfortable everyday smartwatch for activity, notifications, and staying connected.",
+    "features": [
+      "Activity tracking",
+      "Comfortable sport band",
+      "Clear touch display"
+    ],
+    "rating": 4.7,
+    "reviews": 416,
+    "stock": 23,
+    "images": [
+      "/products/apple-watch-0.webp",
+      "/products/apple-watch-1.webp",
+      "/products/apple-watch-2.webp"
+    ]
+  },
+  {
+    "id": "homepod",
+    "title": "Apple HomePod mini",
+    "brand": "Apple",
+    "category": "Electronics",
+    "price": 79,
+    "originalPrice": 99,
+    "variants": [
+      "Space Grey"
+    ],
+    "tagline": "Small speaker. Big personality.",
+    "description": "A compact home speaker that brings music into your favorite spaces.",
+    "features": [
+      "Compact spherical design",
+      "Room-filling audio",
+      "Simple touch controls"
+    ],
+    "rating": 4.5,
+    "reviews": 975,
+    "stock": 24,
+    "images": [
+      "/products/homepod-0.webp"
+    ]
+  },
+  {
+    "id": "wireless-charger",
+    "title": "Wireless charging mat",
+    "brand": "Apple",
+    "category": "Electronics",
+    "price": 29,
+    "originalPrice": 39,
+    "variants": [
+      "White"
+    ],
+    "tagline": "Less cable clutter.",
+    "description": "A clean charging surface for your compatible everyday devices.",
+    "features": [
+      "Slim desktop design",
+      "Wireless charging",
+      "Non-slip base"
+    ],
+    "rating": 4.8,
+    "reviews": 328,
+    "stock": 25,
+    "images": [
+      "/products/wireless-charger-0.webp"
+    ]
+  },
+  {
+    "id": "table-lamp",
+    "title": "Arc table lamp",
+    "brand": "ShopSwift Home",
+    "category": "Home",
+    "price": 39,
+    "originalPrice": 55,
+    "variants": [
+      "White"
+    ],
+    "tagline": "A brighter little corner.",
+    "description": "Warm up a desk, bedside table, or reading nook with a simple modern lamp.",
+    "features": [
+      "Soft ambient light",
+      "Compact footprint",
+      "Easy on/off switch"
+    ],
+    "rating": 4.6,
+    "reviews": 1248,
+    "stock": 26,
+    "images": [
+      "/products/table-lamp-0.webp"
+    ]
+  },
+  {
+    "id": "plant-pot",
+    "title": "Botanical ceramic planter",
+    "brand": "ShopSwift Home",
+    "category": "Home",
+    "price": 24,
+    "originalPrice": 32,
+    "variants": [
+      "Natural"
+    ],
+    "tagline": "Bring the outside in.",
+    "description": "An easy finishing touch for shelves, windowsills, and sunny corners.",
+    "features": [
+      "Decorative planter",
+      "Easy-care design",
+      "Perfect for a shelf or desk"
+    ],
+    "rating": 4.9,
+    "reviews": 862,
+    "stock": 27,
+    "images": [
+      "/products/plant-pot-0.webp",
+      "/products/plant-pot-1.webp",
+      "/products/plant-pot-2.webp"
+    ]
+  },
+  {
+    "id": "blender",
+    "title": "Everyday countertop blender",
+    "brand": "ShopSwift Home",
+    "category": "Home",
+    "price": 49,
+    "originalPrice": 69,
+    "variants": [
+      "Black"
+    ],
+    "tagline": "Good mornings start here.",
+    "description": "Blend fruit, smoothies, and kitchen favorites with this countertop essential.",
+    "features": [
+      "Easy-to-use controls",
+      "Removable blending jar",
+      "Compact kitchen footprint"
+    ],
+    "rating": 4.7,
+    "reviews": 2301,
+    "stock": 28,
+    "images": [
+      "/products/blender-0.webp",
+      "/products/blender-1.webp",
+      "/products/blender-2.webp"
+    ]
+  },
+  {
+    "id": "travel-cup",
+    "title": "Everyday black aluminum cup",
+    "brand": "ShopSwift Home",
+    "category": "Home",
+    "price": 14,
+    "originalPrice": 19,
+    "variants": [
+      "Black"
+    ],
+    "tagline": "Your favorite daily ritual.",
+    "description": "A lightweight reusable cup for coffee breaks and everyday refreshments.",
+    "features": [
+      "Lightweight aluminum",
+      "Reusable design",
+      "Easy-grip handle"
+    ],
+    "rating": 4.5,
+    "reviews": 416,
+    "stock": 29,
+    "images": [
+      "/products/travel-cup-0.webp",
+      "/products/travel-cup-1.webp"
+    ]
+  },
+  {
+    "id": "puma-trainers",
+    "title": "Puma Future Rider trainers",
+    "brand": "Puma",
+    "category": "Fashion",
+    "price": 64,
+    "originalPrice": 85,
+    "variants": [
+      "US 8",
+      "US 9",
+      "US 10",
+      "US 11"
+    ],
+    "tagline": "Go a little further.",
+    "description": "Everyday sneakers with a retro-inspired profile and an easy, comfortable fit.",
+    "features": [
+      "Cushioned sole",
+      "Lace-up closure",
+      "Casual everyday styling"
+    ],
+    "rating": 4.8,
+    "reviews": 975,
+    "stock": 30,
+    "images": [
+      "/products/puma-trainers-0.webp",
+      "/products/puma-trainers-1.webp",
+      "/products/puma-trainers-2.webp"
+    ]
+  },
+  {
+    "id": "casual-shirt",
+    "title": "Everyday checked cotton shirt",
+    "brand": "Fashion Trends",
+    "category": "Fashion",
+    "price": 29,
+    "originalPrice": 42,
+    "variants": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "tagline": "Your new everyday favorite.",
+    "description": "An easygoing shirt that moves from a casual workday to weekend plans.",
+    "features": [
+      "Classic button closure",
+      "Comfortable regular fit",
+      "Machine washable"
+    ],
+    "rating": 4.6,
+    "reviews": 328,
+    "stock": 31,
+    "images": [
+      "/products/casual-shirt-0.webp",
+      "/products/casual-shirt-1.webp",
+      "/products/casual-shirt-2.webp"
+    ]
+  },
+  {
+    "id": "daypack",
+    "title": "Faux leather everyday backpack",
+    "brand": "Urban Chic",
+    "category": "Fashion",
+    "price": 42,
+    "originalPrice": 59,
+    "variants": [
+      "White"
+    ],
+    "tagline": "Take the day with you.",
+    "description": "A clean, versatile backpack with room for your daily essentials.",
+    "features": [
+      "Adjustable shoulder straps",
+      "Secure zip closure",
+      "Easy-clean faux leather"
+    ],
+    "rating": 4.9,
+    "reviews": 1248,
+    "stock": 32,
+    "images": [
+      "/products/daypack-0.webp",
+      "/products/daypack-1.webp",
+      "/products/daypack-2.webp"
+    ]
+  },
+  {
+    "id": "leather-watch",
+    "title": "Classic brown leather watch",
+    "brand": "Fashion Timepieces",
+    "category": "Fashion",
+    "price": 59,
+    "originalPrice": 79,
+    "variants": [
+      "Brown"
+    ],
+    "tagline": "Right on time.",
+    "description": "A timeless everyday watch with a leather strap and an easy-to-read dial.",
+    "features": [
+      "Adjustable leather strap",
+      "Classic analog dial",
+      "Everyday lightweight feel"
+    ],
+    "rating": 4.7,
+    "reviews": 862,
+    "stock": 33,
+    "images": [
+      "/products/leather-watch-0.webp",
+      "/products/leather-watch-1.webp",
+      "/products/leather-watch-2.webp"
+    ]
+  },
+  {
+    "id": "tennis-racket",
+    "title": "Court Club tennis racket",
+    "brand": "ShopSwift Home",
+    "category": "Fitness",
+    "price": 39,
+    "originalPrice": 55,
+    "variants": [
+      "Standard"
+    ],
+    "tagline": "Make time to play.",
+    "description": "A comfortable recreational racket for your next friendly match.",
+    "features": [
+      "Comfortable wrapped grip",
+      "Recreational all-court design",
+      "Lightweight frame"
+    ],
+    "rating": 4.5,
+    "reviews": 2301,
+    "stock": 34,
+    "images": [
+      "/products/tennis-racket-0.webp"
+    ]
+  },
+  {
+    "id": "basketball",
+    "title": "All Court basketball",
+    "brand": "ShopSwift Home",
+    "category": "Fitness",
+    "price": 24,
+    "originalPrice": 32,
+    "variants": [
+      "Size 7"
+    ],
+    "tagline": "A little friendly competition.",
+    "description": "A durable basketball for pick-up games, practice, and weekends outdoors.",
+    "features": [
+      "Textured grip",
+      "Indoor and outdoor play",
+      "Standard size 7"
+    ],
+    "rating": 4.8,
+    "reviews": 416,
+    "stock": 35,
+    "images": [
+      "/products/basketball-0.webp"
+    ]
+  },
+  {
+    "id": "controller",
+    "title": "Wireless game controller",
+    "category": "Gaming",
+    "price": 49,
+    "originalPrice": 69,
+    "variants": [
+      "White"
+    ],
+    "tagline": "Ready, player one.",
+    "description": "A comfortable wireless controller for relaxed couch gaming and long weekend sessions.",
+    "features": [
+      "Ergonomic grip",
+      "Responsive controls",
+      "USB-C charging"
+    ],
+    "brand": "Studio",
+    "rating": 4.5,
+    "reviews": 184,
+    "stock": 24,
+    "images": [
+      "/products/controller-0.jpg"
+    ]
+  },
+  {
+    "id": "keyboard",
+    "title": "Compact mechanical keyboard",
+    "category": "Gaming",
+    "price": 69,
+    "originalPrice": 99,
+    "variants": [
+      "Standard"
+    ],
+    "tagline": "Find your flow.",
+    "description": "A compact desktop keyboard with satisfying tactile feedback and a clean layout.",
+    "features": [
+      "Compact desktop footprint",
+      "Mechanical switches",
+      "USB connection"
+    ],
+    "brand": "Studio",
+    "rating": 4.6,
+    "reviews": 357,
+    "stock": 24,
+    "images": [
+      "/products/keyboard-0.jpg"
+    ]
+  },
+  {
+    "id": "small-habits",
+    "title": "Small Habits, Better Days",
+    "category": "Books",
+    "price": 16,
+    "originalPrice": 22,
+    "variants": [
+      "Paperback"
+    ],
+    "tagline": "A good day starts small.",
+    "description": "A fictional ShopSwift edition exploring thoughtful routines and small daily changes. An original demo book.",
+    "features": [
+      "Original demo edition",
+      "Paperback format",
+      "240 pages"
+    ],
+    "images": [
+      "/products/small-habits.svg"
+    ],
+    "brand": "ShopSwift Press",
+    "rating": 4.7,
+    "reviews": 530,
+    "stock": 24
+  },
+  {
+    "id": "creative-life",
+    "title": "The Creative Life",
+    "category": "Books",
+    "price": 19,
+    "originalPrice": 26,
+    "variants": [
+      "Hardcover"
+    ],
+    "tagline": "Make something that matters.",
+    "description": "An original demo book about curiosity, finding inspiration, and making space for creative work.",
+    "features": [
+      "Original demo edition",
+      "Hardcover format",
+      "192 pages"
+    ],
+    "images": [
+      "/products/creative-life.svg"
+    ],
+    "brand": "ShopSwift Press",
+    "rating": 4.8,
+    "reviews": 703,
+    "stock": 24
+  }
+]

@@ -5,3 +5,6 @@ node_modules/
 .vercel/
 .env*
 !.env.example
+*.tsbuildinfo
+research/amazon-*.txt
+test-results/
