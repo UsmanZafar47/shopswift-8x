@@ -1,0 +1,5 @@
+# Preserve captured prompts and replies byte-for-byte across operating systems.
+.agent-logs/** -text
+scripts/** text eol=lf
+AGENTS.md text eol=lf
+CAPTURE-TEST.md text eol=lf
