@@ -28,9 +28,9 @@ function extract(source) {
   // Ignore a partially written last record; pick it up on the next poll.
   const rows = raw.slice(0, raw.lastIndexOf('\n')).split('\n').filter(Boolean).map(JSON.parse);
   const meta = rows.find(r => r.type === 'session_meta')?.payload;
-  if (!meta || !meta.cwd || normalize(meta.cwd) !== normalize(root)) return;
+  if (!meta || !meta.cwd || normalize(meta.cwd) !== normalize(root)) { seen.set(source, fingerprint); return; }
   // Internal review threads are not user conversations.
-  if (meta.parent_thread_id || typeof meta.source === 'object' || (meta.thread_source && meta.thread_source !== 'user')) return;
+  if (meta.parent_thread_id || typeof meta.source === 'object' || (meta.thread_source && meta.thread_source !== 'user')) { seen.set(source, fingerprint); return; }
   const id = meta.id || meta.session_id;
   if (!/^[a-zA-Z0-9-]+$/.test(id)) throw new Error('Invalid session id');
   let model = rows.find(r => r.type === 'turn_context')?.payload.model;

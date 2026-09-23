@@ -11,3 +11,13 @@ Commit .agent-logs/ with each meaningful implementation commit. Before committin
 Capture configuration is in scripts/capture-config.json. Only this repository's user sessions are exported.
 Keep the clone simple, close to Amazon's UI, and suitable for free Vercel deployment.
 Wait for the user's build prompt after capture setup.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
