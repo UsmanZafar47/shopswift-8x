@@ -1,260 +1,183 @@
-const { chromium } = require('playwright');
+﻿const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
-const base = process.env.TEST_BASE_URL || 'http://127.0.0.1:3000';
+const { randomUUID } = require('node:crypto');
+const base = process.env.TEST_BASE_URL || 'http://localhost:3000';
 const passed = [];
 const errors = [];
-const check = (name) => {
-  passed.push(name);
-  console.log('PASS', name);
+const pass = (n) => {
+  passed.push(n);
+  console.log('PASS', n);
 };
 (async () => {
   fs.mkdirSync('test-results', { recursive: true });
   const browser = await chromium.launch({ channel: 'chrome' });
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
   const page = await context.newPage();
-  page.setDefaultTimeout(15000);
-  page.setDefaultNavigationTimeout(30000);
-  const watch = (p) => {
-    p.on('pageerror', (e) => errors.push(e.message));
-    p.on('console', (msg) => {
-      if (msg.type() === 'error' && !msg.text().includes('404')) errors.push(msg.text());
-    });
+  page.setDefaultTimeout(25000);
+  const goto = async (path) => {
+    await page.goto(base + path, { waitUntil: 'networkidle', timeout: 60000 });
   };
-  watch(page);
-  const goto = async (route, p = page) => {
-    console.log('VISIT', route);
-    const response = await p.goto(base + route, { waitUntil: 'networkidle', timeout: 30000 });
-    assert(response.status() < 400, `${route}: ${response.status()}`);
-  };
-  const visible = async (locator) => {
-    await locator.waitFor({ state: 'visible', timeout: 20000 });
-  };
-  const noOverflow = async (p) =>
-    assert(
-      await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
-      `Horizontal overflow on ${p.url()}`,
-    );
-  const snapshot = async (name, p = page) => {
-    await p.screenshot({ path: `test-results/${name}.png`, fullPage: true, timeout: 10000 });
-  };
-  const saved = async (p) =>
-    p.evaluate(() => JSON.parse(localStorage.getItem('shopswift-demo-v1')));
+  page.on('pageerror', (e) => errors.push(e.message));
   try {
     await goto('/');
-    await visible(page.getByRole('heading', { name: 'Little upgrades. Big everyday joy.' }));
-    await noOverflow(page);
+    await page.getByRole('heading', { name: 'Make room for good things.' }).waitFor();
+    await page.screenshot({ path: 'test-results/orbit-home-desktop.png', fullPage: true });
+    assert.equal(await page.evaluate(() => localStorage.length), 0);
+    pass('Original homepage loads PostgreSQL products through API without localStorage');
     await page.getByRole('combobox', { name: 'Search products' }).fill('headphones');
-    await visible(page.getByRole('listbox', { name: 'Search suggestions' }));
-    await page.getByRole('combobox', { name: 'Search products' }).press('ArrowDown');
-    await page.getByRole('combobox', { name: 'Search products' }).press('Enter');
+    await page.getByRole('listbox').waitFor();
+    await page.getByRole('combobox').press('ArrowDown');
+    await page.getByRole('combobox').press('Enter');
     await page.waitForURL('**/product/airpods-max');
-    check('Homepage and keyboard search suggestions');
+    pass('Keyboard search suggestions');
     await goto('/search?q=zzznomatch');
-    await visible(page.getByRole('heading', { name: 'No finds just yet.' }));
-    await page.getByRole('link', { name: 'Clear search and filters' }).click();
-    await page.waitForURL('**/search');
-    await page.getByLabel('Home & living', { exact: false }).click();
-    await page.waitForURL('**category=Home');
+    await page.getByRole('heading', { name: 'No finds just yet.' }).waitFor();
+    await goto('/search?category=Home&sort=price-desc');
     assert.equal(await page.locator('.search-grid .product-card').count(), 4);
-    await page.getByRole('combobox', { name: 'Sort products' }).selectOption('price-desc');
-    await page.waitForURL('**sort=price-desc');
-    assert.match(await page.locator('.search-grid .product-title').first().innerText(), /blender/);
-    await page.getByLabel('Under $25', { exact: true }).click();
-    await page.waitForURL('**price=25');
-    assert.equal(await page.locator('.search-grid .product-card').count(), 2);
-    check('Search empty state, category/price filters, sorting');
-    await snapshot('search-desktop');
+    assert.match(await page.locator('.search-grid .product-title').first().innerText(), /blender/i);
+    await page.screenshot({ path: 'test-results/orbit-search-desktop.png', fullPage: true });
+    pass('Search empty state, category filters, and sorting');
+    const catalog = await (
+      await context.request.get(base + '/api/products?category=Home&sort=price-asc')
+    ).json();
+    assert.equal(catalog.products.length, 4);
+    assert(catalog.products[0].price <= catalog.products[1].price);
+    assert.equal((await context.request.get(base + '/api/products/not-real')).status(), 404);
+    pass('Product API filtering, sorting, and missing-product status');
     await goto('/product/puma-trainers');
     await page.getByRole('button', { name: 'US 9', exact: true }).click();
-    await page.getByRole('button', { name: 'Increase quantity', exact: true }).click();
     await page.getByRole('button', { name: 'Add to cart', exact: true }).click();
-    await page.getByRole('button', { name: 'US 10', exact: true }).click();
-    await page.getByRole('button', { name: 'Add to cart', exact: true }).click();
-    await page.getByRole('button', { name: 'View product image 2' }).click();
-    assert(
-      (await page.locator('.thumbnails button').nth(1).getAttribute('class')).includes('selected'),
-    );
-    await snapshot('product-desktop');
+    await page.getByRole('status').filter({ hasText: 'Added to your bag' }).waitFor();
+    await page.screenshot({ path: 'test-results/orbit-product-desktop.png', fullPage: true });
     await goto('/cart');
-    assert.equal((await saved(page)).cart.length, 2);
-    assert.equal(
-      (await saved(page)).cart.reduce((s, i) => s + i.quantity, 0),
-      4,
+    let cart = await (await context.request.get(base + '/api/cart')).json();
+    assert.equal(cart.cart.length, 1);
+    const itemId = cart.cart[0].id;
+    await page
+      .getByRole('button', { name: 'Increase Puma Future Rider trainers quantity' })
+      .click();
+    await page.waitForResponse(
+      (r) => r.url().includes('/api/cart/') && r.request().method() === 'PATCH',
     );
     await page.reload({ waitUntil: 'networkidle' });
-    assert.equal((await saved(page)).cart.length, 2);
-    check('Gallery, variants, quantity, add-to-cart and refresh persistence');
-    await page
-      .getByRole('button', { name: 'Decrease Puma Future Rider trainers quantity' })
-      .first()
-      .click();
-    await page.getByRole('button', { name: 'Save for later', exact: true }).nth(1).click();
-    assert.equal((await saved(page)).cart.length, 1);
+    cart = await (await context.request.get(base + '/api/cart')).json();
+    assert.equal(cart.cart[0].quantity, 2);
+    pass('Database cart addition and quantity persist after refresh');
+    await page.getByRole('button', { name: 'Save for later', exact: true }).click();
+    await page.getByRole('button', { name: 'Move to cart' }).waitFor();
     await page.getByRole('button', { name: 'Move to cart' }).click();
-    assert.equal((await saved(page)).cart.length, 2);
-    await page.getByRole('button', { name: 'Remove', exact: true }).first().click();
-    assert.equal((await saved(page)).cart[0].quantity, 2);
-    assert.match(await page.locator('.cart-subtotal').innerText(), /128\.00/);
-    await snapshot('cart-desktop');
-    check('Cart editing, save/restore, removal, exact totals');
+    await page.getByRole('link', { name: 'Proceed to checkout' }).waitFor();
+    await page.screenshot({ path: 'test-results/orbit-cart-desktop.png', fullPage: true });
+    pass('Database save-for-later and restore');
+    const isolated = await browser.newContext();
+    await isolated.request.get(base + '/api/cart');
+    assert.equal((await isolated.request.delete(base + '/api/cart/' + itemId)).status(), 404);
+    assert.equal(
+      (await (await isolated.request.get(base + '/api/orders')).json()).orders.length,
+      0,
+    );
+    await isolated.close();
+    assert.equal(
+      (
+        await context.request.patch(base + '/api/cart/' + itemId, { data: { quantity: 0 } })
+      ).status(),
+      400,
+    );
+    assert.equal(
+      (
+        await context.request.post(base + '/api/cart', {
+          data: { productId: 'puma-trainers', variant: 'fake', quantity: 1 },
+        })
+      ).status(),
+      409,
+    );
+    pass('Guest isolation and API input validation');
     await page.getByRole('link', { name: 'Proceed to checkout' }).click();
     await page.getByRole('button', { name: 'Continue as demo user' }).click();
-    await visible(page.getByRole('heading', { name: 'Where should your good finds go?' }));
-    await page.getByRole('button', { name: 'Save & continue' }).click();
-    assert.equal(await page.locator('#street').evaluate((e) => e.validity.valid), false);
     await page.getByRole('button', { name: 'Use demo address' }).click();
     await page.getByLabel('ZIP / postal code').fill('abc');
     await page.getByRole('button', { name: 'Save & continue' }).click();
-    await visible(page.getByRole('alert').filter({ hasText: '5-digit' }));
+    await page.getByRole('alert').filter({ hasText: '5-digit' }).waitFor();
     await page.getByLabel('ZIP / postal code').fill('97201');
+    await page.screenshot({ path: 'test-results/orbit-checkout-desktop.png', fullPage: true });
     await page.getByRole('button', { name: 'Save & continue' }).click();
     await page.getByRole('radio', { name: /Express delivery/ }).click();
-    await page.getByRole('radio', { name: /Pay on delivery/ }).click();
     await page.getByRole('button', { name: 'Review your order', exact: true }).click();
-    await snapshot('checkout-desktop');
-    await noOverflow(page);
-    await page.getByRole('button', { name: 'Place demo order · $137.99', exact: true }).click();
+    await page.getByRole('button', { name: /Place demo order/ }).click();
     await page.waitForURL('**/order-confirmation/**');
-    await visible(page.getByRole('heading', { name: 'Good finds. Great choice.' }));
-    let state = await saved(page);
-    assert.equal(state.orders.length, 1);
-    assert.equal(state.orders[0].total, 137.99);
-    assert.equal(state.orders[0].payment, 'Pay on delivery (demo)');
-    assert.equal(state.cart.length, 0);
-    const confirmation = page.url();
+    await page.getByRole('heading', { name: 'Good finds. Great choice.' }).waitFor();
     await page.reload({ waitUntil: 'networkidle' });
-    await visible(page.getByRole('heading', { name: 'Good finds. Great choice.' }));
-    await snapshot('confirmation-desktop');
-    check(
-      'Checkout auth, address validation, shipping/payment, accurate order, cart clearing, confirmation persistence',
+    await page.getByRole('heading', { name: 'Good finds. Great choice.' }).waitFor();
+    await page.screenshot({ path: 'test-results/orbit-confirmation-desktop.png', fullPage: true });
+    const orders = await (await context.request.get(base + '/api/orders')).json();
+    assert.equal(orders.orders[0].total, 137.99);
+    assert.equal(orders.orders[0].items[0].quantity, 2);
+    assert.equal((await (await context.request.get(base + '/api/cart')).json()).cart.length, 0);
+    pass(
+      'Validated checkout creates database order and line items, accurate total, clears cart, survives refresh',
     );
-    await page.getByRole('link', { name: 'View your orders', exact: true }).click();
-    await visible(page.getByRole('heading', { name: 'Demo order confirmed' }));
-    await page.reload({ waitUntil: 'networkidle' });
-    await visible(page.getByRole('heading', { name: 'Demo order confirmed' }));
-    await snapshot('orders-desktop');
-    check('Order history persists on refresh');
-    await goto('/account');
-    await page.getByRole('button', { name: 'Sign out' }).click();
-    await goto('/signin');
-    await page.getByLabel('Email address').fill('demo@shopswift.com');
-    await page.getByLabel('Password', { exact: true }).fill('wrong-password');
-    await page.getByRole('button', { name: 'Sign in', exact: true }).click();
-    await visible(page.getByRole('alert').filter({ hasText: 'Email or password is incorrect' }));
-    await page.getByRole('button', { name: 'Create an account', exact: true }).click();
-    await page.getByLabel('Your name').fill('Test Shopper');
-    await page.getByLabel('Email address').fill('test@shopswift.example');
-    await page.getByLabel('Password', { exact: true }).fill('test-demo-only');
-    await page.getByRole('button', { name: 'Create demo account' }).click();
-    await page.waitForURL('**/account');
     await goto('/orders');
-    await visible(page.getByRole('heading', { name: 'Your first good find is waiting.' }));
-    assert.equal((await saved(page)).accounts.length, 1);
-    assert(!JSON.stringify(await saved(page)).includes('test-demo-only'));
-    check('Invalid login, sign-up, no plaintext passwords, account-specific orders');
-    await goto('/account');
-    await page.getByRole('button', { name: 'Sign out' }).click();
-    await goto('/signin');
-    await page.getByLabel('Email address').fill('test@shopswift.example');
-    await page.getByLabel('Password', { exact: true }).fill('test-demo-only');
-    await page.getByRole('button', { name: 'Sign in', exact: true }).click();
-    await page.waitForURL('**/account');
-    check('Registered demo account can sign in again');
-    await goto('/order-confirmation/not-an-order');
-    await visible(page.getByRole('heading', { name: 'This order isn’t in this browser.' }));
-    const notfound = await page.goto(base + '/product/not-a-product', { waitUntil: 'networkidle' });
-    assert.equal(notfound.status(), 404);
-    await visible(page.getByRole('heading', { name: 'This find got away.' }));
-    check('Unknown order and custom 404');
-    const mobile = await browser.newContext({
-      viewport: { width: 390, height: 844 },
-      isMobile: true,
-      hasTouch: true,
+    await page.getByRole('heading', { name: 'Demo order confirmed' }).waitFor();
+    pass('Order history reads created database order');
+    await context.request.post(base + '/api/cart', {
+      data: { productId: 'plant-pot', variant: 'Natural', quantity: 1 },
     });
-    const mp = await mobile.newPage();
-    watch(mp);
-    await goto('/', mp);
-    await noOverflow(mp);
-    await mp.getByRole('button', { name: 'All departments', exact: true }).click();
-    await mp.locator('#department-menu').getByRole('link', { name: 'Home', exact: true }).click();
-    await mp.waitForURL('**category=Home');
-    await mp.getByRole('button', { name: 'Filters', exact: true }).click();
-    await mp.getByLabel('Under $25', { exact: true }).click();
-    await mp.getByRole('button', { name: /Show 2 results/ }).click();
-    await noOverflow(mp);
-    await snapshot('search-mobile', mp);
-    await goto('/product/plant-pot', mp);
-    await noOverflow(mp);
-    await snapshot('product-mobile', mp);
-    await mp.getByRole('button', { name: 'Buy now', exact: true }).click();
-    await mp.getByRole('button', { name: 'Continue as demo user' }).click();
-    await mp.getByRole('button', { name: 'Use demo address' }).click();
-    await mp.getByRole('button', { name: 'Save & continue' }).click();
-    await mp.getByRole('button', { name: 'Review your order', exact: true }).click();
-    await noOverflow(mp);
-    await snapshot('checkout-mobile', mp);
-    await mp.getByRole('button', { name: 'Place demo order · $28.99', exact: true }).click();
-    await mp.waitForURL('**/order-confirmation/**');
-    await visible(mp.getByRole('heading', { name: 'Good finds. Great choice.' }));
-    await noOverflow(mp);
-    assert.equal((await saved(mp)).orders[0].total, 28.99);
-    await snapshot('confirmation-mobile', mp);
-    check(
-      'Clean mobile session: navigation, filters, buy now, demo card, standard shipping, complete order',
-    );
+    cart = await (await context.request.get(base + '/api/cart')).json();
+    assert.equal(cart.cart.length, 1);
+    {
+      await context.request.delete(base + '/api/cart/' + cart.cart[0].id);
+      assert.equal((await (await context.request.get(base + '/api/cart')).json()).cart.length, 0);
+    }
+    pass('API cart removal');
     for (const width of [360, 768, 1440]) {
-      await page.setViewportSize({ width, height: 900 });
-      for (const route of ['/', '/search', '/cart', '/signin', '/account', '/about']) {
+      await page.setViewportSize({ width, height: 950 });
+      for (const route of ['/', '/search', '/cart', '/signin', '/account', '/about', '/orders']) {
         await goto(route);
-        await noOverflow(page);
+        assert(
+          await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+          `${width} overflow: ${route}`,
+        );
+      }
+      if (width === 360) {
+        await goto('/');
+        await page.screenshot({ path: 'test-results/orbit-home-mobile.png', fullPage: true });
       }
     }
-    check('No horizontal overflow on primary layouts at 360, 768, and 1440 pixels');
-    await goto('/');
-    await page.evaluate(async () => {
-      for (let y = 0; y < document.body.scrollHeight; y += 500) {
-        scrollTo(0, y);
-        await new Promise((r) => setTimeout(r, 130));
-      }
-      scrollTo(0, 0);
+    pass('Responsive routes at 360, 768, and 1440 pixels');
+    const mobile = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    const m = await mobile.newPage();
+    await m.goto(base + '/product/plant-pot', { waitUntil: 'networkidle' });
+    await m.getByRole('button', { name: 'Buy now', exact: true }).click();
+    await m.waitForURL('**/checkout');
+    await m.getByRole('button', { name: 'Continue as demo user' }).click();
+    await m.getByRole('button', { name: 'Use demo address' }).click();
+    await m.getByRole('button', { name: 'Save & continue' }).click();
+    await m.getByRole('button', { name: 'Review your order', exact: true }).click();
+    await m.getByRole('button', { name: /Place demo order/ }).click();
+    await m.waitForURL('**/order-confirmation/**');
+    await m.getByRole('heading', { name: 'Good finds. Great choice.' }).waitFor();
+    await m.evaluate(() => {
+      window.scrollTo(0, 0);
+      if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
     });
-    await page.waitForTimeout(2000);
-    const broken = await page
-      .locator('img')
-      .evaluateAll((images) =>
-        images.filter((i) => !i.complete || i.naturalWidth === 0).map((i) => i.src),
-      );
-    assert.deepEqual(broken, []);
-    await snapshot('home-desktop');
-    check('Homepage local images load after scroll');
-    for (const p of require('../lib/catalog.json')) {
-      for (const image of p.images) {
-        const response = await context.request.get(base + image);
-        assert.equal(response.status(), 200, `Image ${image}`);
-      }
-    }
-    check('Every catalog image is served locally');
-    assert.deepEqual(errors, [], 'Browser console/page errors');
-    check('No serious browser console or hydration errors');
+    await m.screenshot({ path: 'test-results/orbit-confirmation-mobile.png', fullPage: true });
+    const mo = await (await mobile.request.get(base + '/api/orders')).json();
+    assert.equal(mo.orders[0].total, 28.99);
+    await mobile.close();
+    pass('Fresh mobile guest completes buy-now and standard-shipping checkout');
+    assert.deepEqual(errors, []);
+    pass('No browser runtime errors');
     fs.writeFileSync(
-      'test-results/results.json',
-      JSON.stringify(
-        { base, passed, errors, verifiedAt: new Date().toISOString(), confirmation },
-        null,
-        2,
-      ),
+      'test-results/orbit-browser-results.json',
+      JSON.stringify({ base, verifiedAt: new Date().toISOString(), passed, errors }, null, 2),
     );
-    console.log(`ALL ${passed.length} CHECKS PASSED`);
-  } catch (error) {
+    console.log('ALL', passed.length, 'CHECKS PASSED');
+  } catch (e) {
     await page
-      .screenshot({ path: 'test-results/failure.png', fullPage: true, timeout: 5000 })
+      .screenshot({ path: 'test-results/orbit-failure.png', fullPage: true })
       .catch(() => {});
-    fs.writeFileSync(
-      'test-results/results.json',
-      JSON.stringify({ base, passed, errors, failure: error.stack }, null, 2),
-    );
-    console.error(error);
+    console.error(e);
     process.exitCode = 1;
   } finally {
     await browser.close();

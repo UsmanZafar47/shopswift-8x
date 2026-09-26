@@ -12,9 +12,10 @@ export class ApiError extends Error {
   }
 }
 async function database(path: string, body?: unknown) {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key =
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  // Read at request time; this server-only module never embeds configuration in client JS.
+  const url = Reflect.get(process.env, 'NEXT_PUBLIC_SUPABASE_URL') as string | undefined;
+  const key = (Reflect.get(process.env, 'NEXT_PUBLIC_SUPABASE_ANON_KEY') ||
+    Reflect.get(process.env, 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY')) as string | undefined;
   if (!url || !key)
     throw new ApiError(
       'The catalog connection is not configured yet. Please try again later.',

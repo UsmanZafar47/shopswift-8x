@@ -37,7 +37,10 @@ const sample: Address = {
 function AddressForm({ initial, onNext }: { initial: Address; onNext: (a: Address) => void }) {
   const [address, setAddress] = useState(initial);
   const [error, setError] = useState('');
-  const change = (key: keyof Address, value: string) => setAddress((a) => ({ ...a, [key]: value }));
+  const change = (key: keyof Address, value: string) => {
+    setAddress((a) => ({ ...a, [key]: value }));
+    setError('');
+  };
   return (
     <form
       className="address-form"

@@ -2685,7 +2685,7 @@ img {
   margin: 14px 0;
 }
 .summary-line > span:first-child {
-  color: #6b7864;
+  color: #565650;
 }
 .summary-total {
   border-top: 1px solid var(--line);
@@ -4916,4 +4916,12 @@ body {
     grid-template-columns: 1fr;
   }
 }
-.orbit-categories nav a span{color:#62605f}.orbit-categories nav a:hover span{color:white}.summary-line>span{color:#565650}
+.orbit-categories nav a span {
+  color: #62605f;
+}
+.orbit-categories nav a:hover span {
+  color: white;
+}
+.summary-line > span {
+  color: #565650;
+}

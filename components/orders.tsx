@@ -1,4 +1,5 @@
 'use client';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, MapPin, CreditCard, Package, ShoppingBag, Truck } from 'lucide-react';
 import { Order, useStore } from './store';
@@ -118,6 +119,7 @@ export function Orders() {
   );
 }
 export function Confirmation({ id }: { id: string }) {
+  useEffect(() => window.scrollTo(0, 0), [id]);
   const store = useStore();
   if (!store.ready) return <LoadingState />;
   if (!store.user)
