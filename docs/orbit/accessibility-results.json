@@ -1,0 +1,66 @@
+[
+  {
+    "route": "/",
+    "violations": []
+  },
+  {
+    "route": "/search",
+    "violations": []
+  },
+  {
+    "route": "/product/puma-trainers",
+    "violations": []
+  },
+  {
+    "route": "/signin",
+    "violations": []
+  },
+  {
+    "route": "/cart (populated)",
+    "violations": []
+  },
+  {
+    "route": "/checkout (address)",
+    "violations": []
+  },
+  {
+    "route": "/checkout (shipping and payment)",
+    "violations": []
+  },
+  {
+    "route": "/checkout (review)",
+    "violations": []
+  },
+  {
+    "route": "/order-confirmation (saved order)",
+    "violations": []
+  },
+  {
+    "route": "/orders",
+    "violations": []
+  },
+  {
+    "route": "/account",
+    "violations": []
+  },
+  {
+    "route": "/about",
+    "violations": []
+  },
+  {
+    "route": "/ (mobile)",
+    "violations": []
+  },
+  {
+    "route": "/search (mobile)",
+    "violations": []
+  },
+  {
+    "route": "/product/puma-trainers (mobile)",
+    "violations": []
+  },
+  {
+    "route": "/orders (mobile)",
+    "violations": []
+  }
+]

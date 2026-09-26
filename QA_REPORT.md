@@ -1,40 +1,21 @@
-# ShopSwift verification
+﻿# Orbit Market verification
 
-Verified on 23 September 2026 with Google Chrome and the local Next.js production server.
+Revision verified locally on 26 September 2026. **Updated production deployment and hosted Supabase verification are pending configuration.** Do not treat the earlier ShopSwift production report as evidence for this revision.
 
-## Completed
+- ESLint: passed.
+- TypeScript: passed.
+- Next.js production build: passed, with dynamic database/API routes.
+- Database migration and seed: executed in PGlite's real PostgreSQL engine. Tests cover restricted table access, guest isolation, cart operations, validation, order snapshots, stock decrement, transactional rollback, and idempotent retries.
+- Updated browser suite: 13 checks passed against both the development server and the local production build, including desktop and fresh mobile purchases, API validation/isolation, saved items, order history, refresh persistence, and layouts at 360/768/1440 pixels.
+- Accessibility: zero automated WCAG A/AA violations in 16 desktop/mobile screens and checkout states after contrast corrections.
+- No browser runtime errors in the tested shopping flow.
+- Browser localStorage stays empty; runtime catalog data comes from the API. Seed JSON is outside runtime imports.
+- Agent capture heartbeat is active. Existing logs are preserved and committed incrementally.
 
-- ESLint: passed with no warnings or errors.
-- Production build: passed, including TypeScript and all 31 generated pages.
-- Browser suite: **14 checks passed**, including desktop and clean mobile purchases, variant separation, cart persistence, save/restore, removal, shipping totals, address validation, demo authentication, separate account order histories, confirmation/order refreshes, and unknown routes.
-- Responsive layout: no horizontal overflow on the tested primary routes at 360, 768, and 1440 pixels. Full mobile checkout also tested at 390 pixels.
-- Images: every bundled catalog image returned HTTP 200; homepage images loaded after scrolling.
-- Browser console: no serious errors or hydration errors during the suite.
-- Accessibility: **zero automated WCAG A/AA violations in 16 audited screens/states**, covering homepage, search, product, sign-in, populated cart, three checkout steps, confirmation, orders, account, about, and selected mobile views. Automated checks supplement rather than replace manual accessibility review.
-- Capture: two real-session canaries passed before product implementation; the automatic watcher remains running. Logs are committed throughout development.
+Reports: [browser](docs/orbit/browser-results.json), [accessibility](docs/orbit/accessibility-results.json). These browser results use the local PostgreSQL integration fixture, not hosted Supabase. Automated accessibility audits do not replace manual review.
 
-Raw reports: [browser results](docs/browser-results.json), [accessibility results](docs/accessibility-results.json). Test programs: `scripts/test-e2e.cjs` and `scripts/test-accessibility.cjs`.
+## Remaining production gate
 
-## Issues found and resolved
+Run the schema and seed in hosted Supabase, configure its URL/public key in `.env.local` and Vercel, deploy the existing project, and rerun the shopping/API checks anonymously against the live URL. Confirm actual hosted table writes and nested-route refreshes. The camera-on walkthrough remains the applicant's responsibility.
 
-- URL-driven filter updates needed navigation-aware test assertions.
-- Runtime image optimization stalled on a local image. The catalog's already-compressed local images now use direct delivery through Next.js Image, with no external runtime request or Vercel image transformation dependency.
-- Unknown product IDs now return a real 404 through a fixed set of generated product routes.
-- Secondary text colors were darkened to meet contrast requirements.
-- Delivery dates are computed after hydration so a statically generated product page does not disagree with a later browser visit.
-- Tests use a specific validation-error locator rather than matching Next.js's separate route announcer.
-
-## Live deployment verification
-
-Verified on 23 September 2026 (UTC) at https://shopswift-8x.vercel.app:
-
-- Vercel production build completed successfully.
-- All 14 browser checks passed against the live deployment, including fresh desktop/mobile sessions and complete demo purchases.
-- All 29 tested routes returned HTTP 200 when opened directly without deployment authentication, including all 20 product pages.
-- The GitHub repository is public and its `.agent-logs/` directory is accessible anonymously.
-
-Live reports: [browser results](docs/production-browser-results.json), [direct route checks](docs/production-routes.json).
-
-## Applicant walkthrough
-
-The camera-on walkthrough must be recorded by the applicant and kept under five minutes. Private Amazon account/checkout screens remain unverified unless the applicant inspects them manually.
+Original reports and screenshots elsewhere in `docs/` document the previous submission only.

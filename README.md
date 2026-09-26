@@ -1,108 +1,77 @@
-# ShopSwift
+﻿# Orbit Market
 
-An Amazon-inspired marketplace with original branding, a local catalog, and a complete browser-persisted demo shopping journey. Built for the 8x engineering take-home assignment.
+A curated marketplace for considered everyday objects. This revision keeps the original shopping journey while introducing an original editorial identity and PostgreSQL-backed products, carts, and orders.
 
-**Public repository:** https://github.com/UsmanZafar47/shopswift-8x
+- Public repository: https://github.com/UsmanZafar47/shopswift-8x
+- Existing production URL: https://shopswift-8x.vercel.app
+- **Revision status:** implemented and tested locally; hosted Supabase setup and the updated production deployment are pending. The production URL still serves the prior submission until deployment is verified.
 
-**Live demo:** https://shopswift-8x.vercel.app
+## Design and features
 
-Deployed to Vercel and verified without deployment authentication. All 14 browser checks passed against the live site, and 29 routes opened directly. See [QA_REPORT.md](QA_REPORT.md) for evidence. Deployment updates currently use the Vercel CLI (`vercel deploy --prod`); automatic GitHub deployments are not configured.
+A light, compact header; an asymmetric editorial hero; violet accents; collection chips; spacious cards; a restrained cart and checkout. Search suggestions, filters, sorting, product galleries/variants, cart editing, saved items, guest details, shipping choices, confirmation, and order history.
 
-![ShopSwift desktop homepage](docs/screenshots/home-desktop.png)
+**Checkout is a demo. No payments, genuine card details, emails, or shipments.** Use fictional contact information.
 
-More previews: [mobile homepage](docs/screenshots/home-mobile.png), [checkout](docs/screenshots/checkout-desktop.png), and [mobile confirmation](docs/screenshots/confirmation-mobile.png).
+## Architecture
 
-## Try it locally
+Next.js App Router / React / TypeScript / Tailwind / Supabase PostgreSQL. The browser calls Next.js route handlers. `lib/database.ts` accesses Supabase's REST API using the public key. Products are queried from PostgreSQL; JSON under `supabase/` is seed input only and is never imported by the runtime.
 
-Use Node.js 22 or newer and npm.
+An HttpOnly, SameSite guest cookie holds a random 256-bit capability. PostgreSQL stores its SHA-256 hash. Guest tables deny direct anonymous access; a narrowly scoped database function checks the capability on every operation. No service-role key or localStorage is used. This is guest-session access, not email/password authentication or cross-device account recovery.
 
-```sh
-npm ci
-npm run dev
-```
+Tables:
 
-Open http://localhost:3000. No environment variables, database, API keys, or paid services are required.
-
-For a production run:
-
-```sh
-npm run build
-npm start
-```
-
-## Demo account
-
-Choose **Continue as demo user** at sign-in or checkout, or use:
-
-- Email: `demo@shopswift.com`
-- Password: `demo123`
-
-You can also create a fictional account. Use a made-up password and the **Use demo address** button. Nothing is charged or shipped. Accounts and orders are isolated by email within the current browser; they are not server-authenticated accounts.
-
-## What works
-
-- 20 local products across Electronics, Home, Fashion, Gaming, Fitness, and Books.
-- Search suggestions with keyboard navigation; category, price, rating, and discount filters; sorting encoded in the URL.
-- Product image galleries, variants, ratings, quantity selection, Add to cart, and Buy now.
-- Persistent variant-aware cart, quantity editing, removal, and save for later.
-- Demo sign-in/sign-up, saved address, standard/express shipping, demo card or simulated payment on delivery.
-- Order review, confirmation, persistent order history, and Buy again.
-- Desktop and mobile layouts, focus states, feedback toasts, validation, empty states, loading UI, and custom 404s.
-- Local images served directly with Next.js Image layout handling; no runtime product or image API dependency.
-
-## Stack and structure
-
-Next.js App Router, React, TypeScript, Tailwind CSS, Lucide icons, and localStorage. No backend service is needed.
-
-```text
-app/                 Routes, metadata, global styling, loading/error pages
-components/          Store provider and shopping interfaces
-lib/catalog.json     The local catalog
-lib/catalog.ts       Catalog types and helpers
-public/products/     Bundled product photography and original book artwork
-research/            Build brief, Amazon research screenshots, asset sources
-scripts/             Agent capture, browser tests, and catalog preparation
-.agent-logs/         Automatic raw prompts and final replies
-```
-
-Prices use integer-cent arithmetic when computing order subtotals. Shipping is free from $50, otherwise $4.99; express is $9.99. Demo tax is zero. Orders snapshot their items and totals at purchase time. A failed storage write preserves the cart and displays an error rather than reporting an unsaved order as successful.
-
-## Routes
-
-| Route | Purpose |
+| Table | Purpose |
 | --- | --- |
-| `/` | Marketplace homepage |
-| `/search` | Search, departments, filters, and sorting |
-| `/product/[id]` | Product details and purchase controls |
-| `/cart` | Cart and saved items |
-| `/signin` | Demo sign-in and sign-up |
-| `/checkout` | Address, shipping/payment, and review |
-| `/order-confirmation/[id]` | Saved order details |
-| `/orders` | Current account's demo orders |
-| `/account` | Profile and saved delivery address |
-| `/about` | Demo behavior and limitations |
+| `products` | Catalog, variants, prices, images, ratings, stock |
+| `carts` | Hashed guest session, profile, saved address |
+| `cart_items` | Active/saved items; unique cart + product + variant |
+| `orders` | Address, totals, status, idempotency key |
+| `order_items` | Product name/image/price/variant snapshots |
 
-## Checks
+`orbit_shop` serializes cart writes. Order creation locks products in a stable order, validates stock, calculates totals from database prices, snapshots items, decrements stock, and clears purchased items in one transaction. An idempotency key prevents a retried request from duplicating the order. Standard shipping is $4.99, free from $50; express is $9.99. Tax is zero in this demo.
+
+## API
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| GET | `/api/products?search=&category=&sort=` | Catalog; sort `price-asc`, `price-desc`, `rating` |
+| GET | `/api/products/[id]` | Product or 404 |
+| GET / POST | `/api/cart` | Read session state / add product, variant, quantity |
+| PATCH / DELETE | `/api/cart/[id]` | Update quantity/saved flag / remove item |
+| POST | `/api/profile` | Save guest name and email |
+| GET / POST | `/api/orders` | Session order history / transactional checkout |
+
+Mutation routes validate input and reject cross-origin requests. Errors use JSON `{error}` with 400/403/404/409/503 statuses. Database outages produce an explicit retry state, never a fallback mock catalog.
+
+## Setup
+
+1. Install Node.js 22+ and run `npm ci`.
+2. Create a free Supabase project.
+3. Run `supabase/001_marketplace.sql`, then `supabase/002_seed.sql` in its SQL Editor.
+4. Copy `.env.example` to `.env.local`. Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` (the public/publishable key; `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` is also supported).
+5. Run `npm run dev` and open http://localhost:3000.
+
+No server secret is required. Never paste credentials into captured conversations or commit `.env` files. For Vercel, configure the same variable names for production and deploy the linked project using `vercel deploy --prod`. GitHub automatic deployments are not configured.
+
+## Verification
 
 ```sh
 npm run lint
+npx tsc --noEmit
+npm run test:db
 npm run build
 npm run test:e2e
-node scripts/test-accessibility.cjs
+npm run test:a11y
 ```
 
-The browser tests use an installed Google Chrome. If needed, install Chrome or change Playwright's `channel` setting and install its Chromium browser. Start the app before running browser tests. To test a different server, set `TEST_BASE_URL` (for example, `http://127.0.0.1:3001`). Browser screenshots and reports are written to ignored `test-results/`.
+Browser tests require Google Chrome and a running server. Set `TEST_BASE_URL` to its URL (e.g. `http://localhost:3000`). Tests create demo orders and decrement demo stock. `test:db` runs the real migration and transaction tests in an isolated PGlite PostgreSQL engine; it does not verify hosted Supabase.
 
-## Decisions and limits
+For local integration work without hosted credentials only: run `node scripts/dev-postgres.cjs`, then start Next.js with `NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54329` and `NEXT_PUBLIC_SUPABASE_ANON_KEY=local-integration-public-key` in that process's environment. This adapter runs PostgreSQL locally and is excluded from deployment. It is not a production database substitute.
 
-See [PRODUCT_NOTES.md](PRODUCT_NOTES.md) for observed Amazon behavior and scope choices. The public homepage, search, product, guest cart, and sign-in gate were inspected. Account-gated Amazon checkout screens were not personally verified; no private information or real payment was entered.
+See [QA_REPORT.md](QA_REPORT.md), [PRODUCT_DECISIONS.md](PRODUCT_DECISIONS.md), and [WALKTHROUGH_SCRIPT.md](WALKTHROUGH_SCRIPT.md).
 
-This is a frontend simulation. No real payments, sellers, shipping infrastructure, subscriptions, admin, live stock, email delivery, or full Amazon parity. Local passwords are digested for this demo, but this is not secure production authentication. Clearing browser storage removes demo data. Product prices, discounts, ratings, reviews, and delivery dates are illustrative. ShopSwift is not affiliated with Amazon or the displayed manufacturers.
+## Tradeoffs and capture
 
-Image sources and the original book artwork are documented in [research/ASSET_SOURCES.md](research/ASSET_SOURCES.md).
+Catalog values are seeded demonstration data, read from the database at runtime. Recently viewed items live only in React memory. Guest access depends on the session cookie; clearing it loses access to prior orders. There is no real authentication, payment, admin, recovery, inventory replenishment UI, or distributed rate limiter. Before broader public use, add abuse protection and authenticated ownership.
 
-## Agent capture and walkthrough
-
-Capture was installed and tested in two independent real Codex sessions before implementation. See [CAPTURE-TEST.md](CAPTURE-TEST.md). The watcher exports only this repository's user prompts and final replies, with UTC timestamps and model identifiers. Logs are committed throughout development. After restarting the machine, follow the watcher startup instructions in [AGENTS.md](AGENTS.md).
-
-Use [WALKTHROUGH_SCRIPT.md](WALKTHROUGH_SCRIPT.md) for a recording under five minutes. **Keep your camera on.**
+Existing `.agent-logs/` are preserved. Automatic capture remains active; logs are committed incrementally. Original implementation evidence/screenshots remain in Git history and `docs/`, labelled as previous-version evidence. Photo sources are in `research/ASSET_SOURCES.md`.
