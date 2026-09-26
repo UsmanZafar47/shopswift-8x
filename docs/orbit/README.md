@@ -1,6 +1,6 @@
 ﻿# Orbit Market — revised design
 
-These screenshots show the revised app running locally against the PostgreSQL integration fixture. They are not evidence of hosted production deployment.
+These screenshots show the revised Orbit Market app. Production browser results below were captured at the public Vercel URL in a fresh signed-out browser context.
 
 ![Editorial homepage](orbit-home-desktop.png)
 

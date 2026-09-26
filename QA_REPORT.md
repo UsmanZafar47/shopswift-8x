@@ -1,21 +1,23 @@
 ﻿# Orbit Market verification
 
-Revision verified locally on 26 September 2026. **Updated production deployment and hosted Supabase verification are pending configuration.** Do not treat the earlier ShopSwift production report as evidence for this revision.
+Revision verified on 26 September 2026. Local PostgreSQL checks and hosted Supabase production checks both passed. The earlier ShopSwift production report is not evidence for this revision.
 
 - ESLint: passed.
 - TypeScript: passed.
 - Next.js production build: passed, with dynamic database/API routes.
 - Database migration and seed: executed in PGlite's real PostgreSQL engine. Tests cover restricted table access, guest isolation, cart operations, validation, order snapshots, stock decrement, transactional rollback, and idempotent retries.
-- Updated browser suite: 13 checks passed against both the development server and the local production build, including desktop and fresh mobile purchases, API validation/isolation, saved items, order history, refresh persistence, and layouts at 360/768/1440 pixels.
-- Accessibility: zero automated WCAG A/AA violations in 16 desktop/mobile screens and checkout states after contrast corrections.
+- Updated browser suite: 14 checks passed against local development, local production, and the live deployment.
+- Accessibility: zero automated WCAG A/AA violations in 16 desktop/mobile screens and checkout states on the live deployment.
 - No browser runtime errors in the tested shopping flow.
 - Browser localStorage stays empty; runtime catalog data comes from the API. Seed JSON is outside runtime imports.
 - Agent capture heartbeat is active. Existing logs are preserved and committed incrementally.
 
-Reports: [browser](docs/orbit/browser-results.json), [accessibility](docs/orbit/accessibility-results.json). These browser results use the local PostgreSQL integration fixture, not hosted Supabase. Automated accessibility audits do not replace manual review.
+**Production:** https://shopswift-8x.vercel.app (Vercel deployment `dpl_AVhkAj1agVLytngpTKx3biJjpw2R`). An anonymous `GET /api/products` returned 20 PostgreSQL catalog rows. Search, Home filtering, and price sorting passed. The signed-out journey added, refreshed, updated, and removed cart rows, then created an order whose item snapshots appeared in order history. Refresh retained the confirmation, and checkout cleared the cart. No Supabase/API errors or serious browser console errors occurred.
 
-## Remaining production gate
+Reports: [production browser results](docs/orbit/browser-results.json), [production accessibility results](docs/orbit/accessibility-results.json), [screenshots](docs/orbit/README.md). `test:db` separately exercises migration, access isolation, transaction rollback, stock decrement, and idempotency in PGlite. Automated accessibility audits supplement manual review.
 
-Run the schema and seed in hosted Supabase, configure its URL/public key in `.env.local` and Vercel, deploy the existing project, and rerun the shopping/API checks anonymously against the live URL. Confirm actual hosted table writes and nested-route refreshes. The camera-on walkthrough remains the applicant's responsibility.
+## Remaining limitations
+
+Guest order access depends on an HttpOnly session cookie; clearing it removes access to prior orders. There is no full authentication, account recovery, real payment, email, shipment, inventory administration, or distributed rate limiting. Catalog values are seeded demo content. The camera-on walkthrough remains the applicant's responsibility.
 
 Original reports and screenshots elsewhere in `docs/` document the previous submission only.

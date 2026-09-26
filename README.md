@@ -3,8 +3,9 @@
 A curated marketplace for considered everyday objects. This revision keeps the original shopping journey while introducing an original editorial identity and PostgreSQL-backed products, carts, and orders.
 
 - Public repository: https://github.com/UsmanZafar47/shopswift-8x
-- Existing production URL: https://shopswift-8x.vercel.app
-- **Revision status:** implemented and tested locally; hosted Supabase setup and the updated production deployment are pending. The production URL still serves the prior submission until deployment is verified.
+- **Live demo:** https://shopswift-8x.vercel.app
+- **Production revision:** deployed and verified on 26 September 2026.
+- The signed-out live run passed 14 browser checks, including PostgreSQL cart changes, checkout, order history, and mobile checkout. See [live verification and screenshots](docs/orbit/README.md).
 
 ## Design and features
 
@@ -14,7 +15,7 @@ A light, compact header; an asymmetric editorial hero; violet accents; collectio
 
 ## Architecture
 
-Next.js App Router / React / TypeScript / Tailwind / Supabase PostgreSQL. The browser calls Next.js route handlers. `lib/database.ts` accesses Supabase's REST API using the public key. Products are queried from PostgreSQL; JSON under `supabase/` is seed input only and is never imported by the runtime.
+Next.js App Router / React / TypeScript / Tailwind / Supabase PostgreSQL. The browser calls Next.js route handlers. `lib/database.ts` accesses Supabase's REST API using the project URL and public/anonymous key configured in Vercel and local `.env.local`. These settings are read by the server API and are absent from generated browser bundles. Products are queried from PostgreSQL; JSON under `supabase/` is seed input only and is never imported by the runtime.
 
 An HttpOnly, SameSite guest cookie holds a random 256-bit capability. PostgreSQL stores its SHA-256 hash. Guest tables deny direct anonymous access; a narrowly scoped database function checks the capability on every operation. No service-role key or localStorage is used. This is guest-session access, not email/password authentication or cross-device account recovery.
 

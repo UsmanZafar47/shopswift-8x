@@ -1,12 +1,13 @@
 {
-  "base": "http://localhost:3003",
-  "verifiedAt": "2026-09-26T10:36:23.293Z",
+  "base": "https://shopswift-8x.vercel.app",
+  "verifiedAt": "2026-09-26T15:19:54.799Z",
   "passed": [
     "Original homepage loads PostgreSQL products through API without localStorage",
     "Keyboard search suggestions",
     "Search empty state, category filters, and sorting",
     "Product API filtering, sorting, and missing-product status",
     "Database cart addition and quantity persist after refresh",
+    "Remove updates PostgreSQL and leaves an empty cart",
     "Database save-for-later and restore",
     "Guest isolation and API input validation",
     "Validated checkout creates database order and line items, accurate total, clears cart, survives refresh",
