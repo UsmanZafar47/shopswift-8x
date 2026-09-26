@@ -81,7 +81,7 @@ begin
      update public.cart_items set quantity=qty,saved=coalesce((p_data->>'saved')::boolean,saved),updated_at=now() where id=i.id;
    end if;
  elsif p_action='profile' then
-   if length(trim(p_data->>'name')) not between 2 and 100 or length(p_data->>'email') > 254 or coalesce(p_data->>'email','') !~ '^[^ @]+@[^ @]+\.[^ @]+$' then raise exception 'Enter a name and valid email'; end if;
+   if length(trim(coalesce(p_data->>'name',''))) not between 2 and 100 or length(p_data->>'email') > 254 or coalesce(p_data->>'email','') !~ '^[^ @]+@[^ @]+\.[^ @]+$' then raise exception 'Enter a name and valid email'; end if;
    update public.carts set customer_name=trim(p_data->>'name'),customer_email=lower(trim(p_data->>'email')) where id=c.id;
  elsif p_action='order' then
    rid := (p_data->>'requestId')::uuid;

@@ -314,7 +314,7 @@ const products = entries
     }
     console.log(p.id);
   }
-  fs.writeFileSync('lib/catalog.json', JSON.stringify(products, null, 2) + '\n');
+  fs.writeFileSync('supabase/catalog-seed.json', JSON.stringify(products, null, 2) + '\n');
   for (const [id, title, a, b, bg, fg] of [
     [
       'small-habits',

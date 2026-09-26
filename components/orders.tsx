@@ -19,12 +19,12 @@ export function Orders() {
           title="Your good finds live here."
           description="Sign in to see your demo orders and the things you’ve loved."
           href="/signin?next=/orders"
-          action="Sign in to view orders"
+          action="Add guest details"
           icon={<Package size={34} />}
         />
       </div>
     );
-  const orders = store.orders.filter((o) => o.email === store.user!.email);
+  const orders = store.orders;
   return (
     <div className="page-shell orders-page">
       <div className="page-title-row">
@@ -32,7 +32,8 @@ export function Orders() {
           <span className="eyebrow">A LITTLE HISTORY OF GOOD FINDS</span>
           <h1>Your orders</h1>
           <p>
-            {orders.length} demo {orders.length === 1 ? 'order' : 'orders'} · Saved in this browser
+            {orders.length} demo {orders.length === 1 ? 'order' : 'orders'} · Saved to your guest
+            session
           </p>
         </div>
         <Link className="text-link" href="/search">
@@ -124,19 +125,19 @@ export function Confirmation({ id }: { id: string }) {
       <div className="page-shell">
         <EmptyState
           title="Let’s find your order."
-          description="Sign in to the demo account you used to place this order, then open Your orders."
+          description="Use the guest session that placed this order, then open Your orders."
           href="/signin?next=/orders"
-          action="Sign in"
+          action="Guest details"
         />
       </div>
     );
-  const o = store.orders.find((o) => o.id === id && o.email === store.user!.email);
+  const o = store.orders.find((o) => o.id === id);
   if (!o)
     return (
       <div className="page-shell">
         <EmptyState
-          title="This order isn’t in this browser."
-          description="Demo orders are saved locally to the account that placed them. Check Your orders or start a new good find."
+          title="This order is not in your session."
+          description="Orders are scoped to the guest session that placed them. Check Your orders or start a new find."
           href="/orders"
           action="View your orders"
         />

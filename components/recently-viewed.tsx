@@ -1,9 +1,9 @@
 'use client';
 import { useStore } from './store';
-import { getProduct, Product } from '@/lib/catalog';
+import { Product } from '@/lib/catalog';
 import { ProductSection } from './ui';
 export function RecentlyViewed() {
-  const { recent } = useStore();
+  const { recent, getProduct } = useStore();
   const items = recent.map(getProduct).filter((p): p is Product => !!p);
   return items.length ? (
     <ProductSection

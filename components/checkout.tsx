@@ -16,7 +16,7 @@ import {
   Package,
 } from 'lucide-react';
 import { Address, useStore } from './store';
-import { getProduct, money, deliveryDate } from '@/lib/catalog';
+import { money, deliveryDate } from '@/lib/catalog';
 import { EmptyState, LoadingState, ProductImage } from './ui';
 const blank: Address = {
   name: '',
@@ -168,6 +168,7 @@ function AddressForm({ initial, onNext }: { initial: Address; onNext: (a: Addres
 }
 export function Checkout() {
   const store = useStore();
+  const { getProduct } = store;
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [address, setAddress] = useState<Address | null>(null);
@@ -194,7 +195,7 @@ export function Checkout() {
     setBusy(true);
     setError('');
     try {
-      const id = store.placeOrder(address, express, payment);
+      const id = await store.placeOrder(address, express, payment);
       router.replace(`/order-confirmation/${id}`);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Could not save your order. Try again.');
@@ -231,7 +232,7 @@ export function Checkout() {
             <ArrowRight size={17} />
           </button>
           <Link className="button secondary" href="/signin?next=/checkout">
-            Sign in or create an account
+            Enter guest details
           </Link>
           <Link className="text-link" href="/cart">
             <ArrowLeft size={14} />
@@ -274,7 +275,6 @@ export function Checkout() {
                 address || store.addresses[store.user.email] || { ...blank, name: store.user.name }
               }
               onNext={(a) => {
-                store.saveAddress(a);
                 setAddress(a);
                 go(2);
               }}

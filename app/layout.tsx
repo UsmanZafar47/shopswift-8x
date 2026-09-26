@@ -3,9 +3,9 @@ import { StoreProvider } from '@/components/store';
 import { Footer, Header } from '@/components/header';
 import './globals.css';
 export const metadata: Metadata = {
-  title: { default: 'ShopSwift — Your everyday, upgraded.', template: '%s | ShopSwift' },
+  title: { default: 'Orbit Market — Your everyday, upgraded.', template: '%s | Orbit Market' },
   description:
-    'Thoughtfully picked everyday finds. Explore the ShopSwift demo marketplace, from tech and home to your next great read.',
+    'Thoughtfully picked everyday finds. Explore the Orbit Market demo marketplace, from tech and home to your next great read.',
 };
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

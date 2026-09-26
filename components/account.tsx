@@ -1,101 +1,41 @@
-'use client';
+﻿'use client';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Package, MapPin, LogOut, ShoppingBag, ArrowRight, User } from 'lucide-react';
 import { useStore } from './store';
-import { EmptyState, LoadingState } from './ui';
+import { LoadingState } from './ui';
 export function AccountPage() {
   const store = useStore();
-  const router = useRouter();
   if (!store.ready) return <LoadingState />;
-  if (!store.user)
-    return (
-      <div className="page-shell">
-        <EmptyState
-          title="Make yourself at home."
-          description="Sign in to see your orders, saved delivery details, and all your good finds."
-          href="/signin"
-          action="Sign in or try the demo"
-          icon={<User size={33} />}
-        />
-      </div>
-    );
-  const address = store.addresses[store.user.email];
   return (
-    <div className="page-shell account-page">
-      <div className="account-welcome">
-        <span className="account-avatar">{store.user.name.charAt(0).toUpperCase()}</span>
-        <div>
-          <span className="eyebrow">YOUR LITTLE CORNER OF SHOPSWIFT</span>
-          <h1>Hello, {store.user.name.split(' ')[0]}.</h1>
-          <p>{store.user.email}</p>
-        </div>
-        <button
-          className="button secondary small"
-          onClick={() => {
-            store.logout();
-            router.push('/');
-          }}
-        >
-          <LogOut size={15} />
-          Sign out
-        </button>
-      </div>
+    <div className="page-shell">
+      <span className="eyebrow">YOUR ORBIT</span>
+      <h1>{store.user ? `Hello, ${store.user.name.split(' ')[0]}.` : 'Make yourself at home.'}</h1>
+      <p className="muted">Your guest details, bag, and order history.</p>
       <div className="account-grid">
         <Link className="account-card" href="/orders">
-          <Package />
           <h2>Your orders</h2>
-          <p>
-            {store.orders.filter((o) => o.email === store.user!.email).length} demo orders, all in
-            one place.
-          </p>
-          <span className="text-link">
-            See your good finds
-            <ArrowRight size={15} />
-          </span>
+          <p>{store.orders.length} demo orders saved to your session.</p>
+          <span className="text-link">View order history →</span>
         </Link>
         <Link className="account-card" href="/cart">
-          <ShoppingBag />
-          <h2>Your shopping cart</h2>
-          <p>
-            {store.cart.reduce((s, i) => s + i.quantity, 0)} items ready for a little happiness.
-          </p>
-          <span className="text-link">
-            Take another look
-            <ArrowRight size={15} />
-          </span>
+          <h2>Your bag</h2>
+          <p>{store.cart.reduce((s, i) => s + i.quantity, 0)} thoughtfully chosen pieces.</p>
+          <span className="text-link">View your bag →</span>
         </Link>
-        <section className="account-card">
-          <MapPin />
-          <h2>Delivery address</h2>
-          {address ? (
-            <p>
-              {address.name}
-              <br />
-              {address.street}
-              <br />
-              {address.city}, {address.region} {address.zip}
-              <br />
-              {address.country}
-            </p>
-          ) : (
-            <p>
-              No address saved yet. Add a fictional delivery address during your first checkout.
-            </p>
-          )}
-          <p className="account-note">You can update your address at checkout.</p>
-        </section>
-      </div>
-      <div className="demo-credentials">
-        <User size={22} />
-        <div>
-          <b>This is your demo account.</b>
+        <Link className="account-card" href="/signin">
+          <h2>Guest details</h2>
           <p>
-            Account details and orders are stored only in this browser. This isn’t a real shopping
-            account, and no email is sent.
+            {store.user?.name || 'Add your name'}
+            <br />
+            {store.user?.email || 'No password needed.'}
           </p>
-        </div>
+          <span className="text-link">Update details →</span>
+        </Link>
       </div>
+      <p className="demo-credentials">
+        Your orders are stored in our database and linked to a private guest session. Clearing your
+        cookie loses access; matching email addresses do not grant access to another session. No
+        payment is processed.
+      </p>
     </div>
   );
 }

@@ -3,9 +3,11 @@ import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { SlidersHorizontal, X, Search, ChevronRight, Star } from 'lucide-react';
-import { products, categories, discount } from '@/lib/catalog';
-import { ProductCard } from './ui';
+import { categories, discount } from '@/lib/catalog';
+import { ProductCard, LoadingState } from './ui';
+import { useStore } from './store';
 export function SearchResults() {
+  const { products, ready } = useStore();
   const params = useSearchParams();
   const router = useRouter();
   const [mobileFilters, setMobileFilters] = useState(false);
@@ -21,6 +23,7 @@ export function SearchResults() {
     else p.delete(key);
     router.replace(`/search?${p}`, { scroll: false });
   };
+  if (!ready) return <LoadingState />;
   let results = products.filter(
     (p) =>
       (!query ||

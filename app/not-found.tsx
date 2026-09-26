@@ -6,7 +6,7 @@ export default function NotFound() {
         title="This find got away."
         description="We couldn’t find that page. There are plenty of good things waiting back in the store."
         href="/"
-        action="Back to ShopSwift"
+        action="Back to Orbit Market"
       />
     </div>
   );

@@ -110,7 +110,7 @@
   {
     "id": "table-lamp",
     "title": "Classic brass table lamp",
-    "brand": "ShopSwift Home",
+    "brand": "Orbit Home",
     "category": "Home",
     "price": 39,
     "originalPrice": 55,
@@ -126,7 +126,7 @@
   {
     "id": "plant-pot",
     "title": "Botanical ceramic planter",
-    "brand": "ShopSwift Home",
+    "brand": "Orbit Home",
     "category": "Home",
     "price": 24,
     "originalPrice": 32,
@@ -146,7 +146,7 @@
   {
     "id": "blender",
     "title": "Everyday countertop blender",
-    "brand": "ShopSwift Home",
+    "brand": "Orbit Home",
     "category": "Home",
     "price": 49,
     "originalPrice": 69,
@@ -162,7 +162,7 @@
   {
     "id": "travel-cup",
     "title": "Everyday black aluminum cup",
-    "brand": "ShopSwift Home",
+    "brand": "Orbit Home",
     "category": "Home",
     "price": 14,
     "originalPrice": 19,
@@ -254,7 +254,7 @@
   {
     "id": "tennis-racket",
     "title": "Court Club tennis racket",
-    "brand": "ShopSwift Home",
+    "brand": "Orbit Home",
     "category": "Fitness",
     "price": 39,
     "originalPrice": 55,
@@ -270,7 +270,7 @@
   {
     "id": "basketball",
     "title": "All Court basketball",
-    "brand": "ShopSwift Home",
+    "brand": "Orbit Home",
     "category": "Fitness",
     "price": 24,
     "originalPrice": 32,
@@ -323,10 +323,10 @@
     "originalPrice": 22,
     "variants": ["Paperback"],
     "tagline": "A good day starts small.",
-    "description": "A fictional ShopSwift edition exploring thoughtful routines and small daily changes. An original demo book.",
+    "description": "A fictional Orbit edition exploring thoughtful routines and small daily changes. An original demo book.",
     "features": ["Original demo edition", "Paperback format", "240 pages"],
     "images": ["/products/small-habits.svg"],
-    "brand": "ShopSwift Press",
+    "brand": "Orbit Press",
     "rating": 4.7,
     "reviews": 530,
     "stock": 24
@@ -342,7 +342,7 @@
     "description": "An original demo book about curiosity, finding inspiration, and making space for creative work.",
     "features": ["Original demo edition", "Hardcover format", "192 pages"],
     "images": ["/products/creative-life.svg"],
-    "brand": "ShopSwift Press",
+    "brand": "Orbit Press",
     "rating": 4.8,
     "reviews": 703,
     "stock": 24

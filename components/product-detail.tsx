@@ -13,11 +13,12 @@ import {
   Minus,
   Plus,
 } from 'lucide-react';
-import { Product, products, money, discount, deliveryDate } from '@/lib/catalog';
+import { Product, money, discount, deliveryDate } from '@/lib/catalog';
 import { ProductImage, ProductSection, Stars } from './ui';
 import { useStore } from './store';
 export function ProductDetail({ product: p }: { product: Product }) {
   const store = useStore();
+  const { products } = store;
   const router = useRouter();
   const [image, setImage] = useState(0);
   const [variant, setVariant] = useState(p.variants[0]);
@@ -25,8 +26,8 @@ export function ProductDetail({ product: p }: { product: Product }) {
   const [added, setAdded] = useState(false);
   const { view } = store;
   useEffect(() => view(p.id), [p.id, view]);
-  function add(buy = false) {
-    store.add(p.id, variant, quantity);
+  async function add(buy = false) {
+    if (!(await store.add(p.id, variant, quantity))) return;
     setAdded(true);
     if (buy) router.push('/checkout');
   }
@@ -160,7 +161,11 @@ export function ProductDetail({ product: p }: { product: Product }) {
               </button>
             </div>
           </label>
-          <button className="button primary full" onClick={() => add()} disabled={!store.ready}>
+          <button
+            className="button primary full"
+            onClick={() => add()}
+            disabled={!store.ready || store.busy || p.stock < 1}
+          >
             {added ? <Check size={17} /> : <ShoppingCart size={17} />}{' '}
             {added ? 'Added to cart' : 'Add to cart'}
           </button>
@@ -186,7 +191,7 @@ export function ProductDetail({ product: p }: { product: Product }) {
           </div>
           <dl>
             <dt>Sold by</dt>
-            <dd>ShopSwift demo</dd>
+            <dd>Orbit Market</dd>
             <dt>Ships from</dt>
             <dd>Our imaginary warehouse</dd>
           </dl>
@@ -204,15 +209,6 @@ export function ProductDetail({ product: p }: { product: Product }) {
             </div>
           </div>
           <p className="muted">Ratings and reviews are sample content for this demo.</p>
-        </div>
-        <div className="sample-review">
-          <Stars rating={5} />
-          <h3>One of those little everyday upgrades.</h3>
-          <p>
-            Thoughtfully designed, easy to use, and a lovely addition to the daily routine. Just
-            what I was looking for.
-          </p>
-          <span>Alex · Sample reviewer</span>
         </div>
       </section>
       <ProductSection

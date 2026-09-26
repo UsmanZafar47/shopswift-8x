@@ -12,10 +12,11 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { useStore } from './store';
-import { getProduct, money, deliveryDate } from '@/lib/catalog';
+import { money, deliveryDate } from '@/lib/catalog';
 import { EmptyState, LoadingState, ProductImage, ProductSection } from './ui';
 export function Cart() {
   const store = useStore();
+  const { getProduct } = store;
   if (!store.ready) return <LoadingState />;
   const count = store.cart.reduce((s, i) => s + i.quantity, 0);
   const subtotal =
@@ -183,13 +184,9 @@ export function Cart() {
       )}
       <ProductSection
         title="A little something to go with it."
-        products={[
-          'travel-cup',
-          'small-habits',
-          'plant-pot',
-          'wireless-charger',
-          'tennis-racket',
-        ].map((id) => getProduct(id)!)}
+        products={store.products
+          .filter((p) => !store.cart.some((i) => i.productId === p.id))
+          .slice(0, 4)}
       />
     </div>
   );

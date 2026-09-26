@@ -61,7 +61,7 @@ export function ProductCard({ product: p, index = 0 }: { product: Product; index
         </div>
         <p className="card-delivery">
           <Check size={13} />
-          <b>swift</b>
+          <b>orbit</b>
           <span>Free shipping over $50</span>
         </p>
       </div>
