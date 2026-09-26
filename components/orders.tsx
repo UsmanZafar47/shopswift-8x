@@ -119,7 +119,9 @@ export function Orders() {
   );
 }
 export function Confirmation({ id }: { id: string }) {
-  useEffect(() => window.scrollTo(0, 0), [id]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
   const store = useStore();
   if (!store.ready) return <LoadingState />;
   if (!store.user)

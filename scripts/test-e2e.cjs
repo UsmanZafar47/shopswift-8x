@@ -19,6 +19,9 @@ const pass = (n) => {
     await page.goto(base + path, { waitUntil: 'networkidle', timeout: 60000 });
   };
   page.on('pageerror', (e) => errors.push(e.message));
+  page.on('console', (message) => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
   try {
     await goto('/');
     await page.getByRole('heading', { name: 'Make room for good things.' }).waitFor();
@@ -64,6 +67,15 @@ const pass = (n) => {
     cart = await (await context.request.get(base + '/api/cart')).json();
     assert.equal(cart.cart[0].quantity, 2);
     pass('Database cart addition and quantity persist after refresh');
+    await page.getByRole('button', { name: 'Remove', exact: true }).click();
+    await page.getByRole('heading', { name: 'Your next good find is waiting.' }).waitFor();
+    cart = await (await context.request.get(base + '/api/cart')).json();
+    assert.equal(cart.cart.length, 0);
+    pass('Remove updates PostgreSQL and leaves an empty cart');
+    await context.request.post(base + '/api/cart', {
+      data: { productId: 'puma-trainers', variant: 'US 9', quantity: 2 },
+    });
+    await page.reload({ waitUntil: 'networkidle' });
     await page.getByRole('button', { name: 'Save for later', exact: true }).click();
     await page.getByRole('button', { name: 'Move to cart' }).waitFor();
     await page.getByRole('button', { name: 'Move to cart' }).click();
